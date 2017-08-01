@@ -10,7 +10,7 @@ export default class DeviceHiveClient {
           this.createTokenPair(login, password);
           this.__socket.addEventListener(`message`, (event) => {
             const messageData = JSON.parse(event.data);
-            if (messageData.status === `success`){
+            if ((messageData.action === `token` || messageData.action === `authenticate`) && messageData.status === `success`){
               switch (messageData.action) {
               case `token` : 
                 return this.__tokenMessage(messageData)
@@ -19,8 +19,10 @@ export default class DeviceHiveClient {
                 return console.log(`authenticated`);
               }
             } else {
-              console.log(messageData);
-              throw new Error(`Websocket error`);
+              if (messageData.status === `error`){
+                console.log(messageData);
+                throw new Error(`Websocket error`);
+              }
             }
           })
         })
@@ -38,35 +40,53 @@ export default class DeviceHiveClient {
     }));
   }
 
-  queryData(type, deviceId, dateRange, dataPath){
+  queryData(targets, deviceId, dateRange){
     return new Promise((resolve) => {
-      this.__socket.send(JSON.stringify({
-        action : `${type}/list`,
-        deviceId : deviceId,
-        start : moment(dateRange.from).format(`YYYY-MM-DD[T]HH:mm:ss.SSS`),
-        end : moment(dateRange.to).format(`YYYY-MM-DD[T]HH:mm:ss.SSS`)
-      }));
-
+      const extractedTargets = targets
+        .slice(0)
+        .reduce((obj, item) => {
+          if (!obj[item.type]){
+            obj[item.type] = [item.dataPath];
+          } else {
+            obj[item.type] = [
+              ...obj[item.type],
+              item.dataPath
+            ];
+          }
+          return obj;
+        }, {});
+      const types = Object.keys(extractedTargets);
+      const results = [];
+      let request = types.length;
       const commandNotificationHandler = (event) => {
         const messageData = JSON.parse(event.data);
-        if (messageData.action === `${type}/list`) {
-          console.log(messageData);
-          this.__socket.removeEventListener(`message`, commandNotificationHandler);
-          const types = messageData[`${type}s`];
-          const points = types.map(item => [this.__extractValue(item, dataPath), Date.parse(item.timestamp)])
-          resolve({ 
-            data : [
-              {
-                target : type,
-                datapoints : points
-              }
-            ]
-          });
+        const actions = messageData.action.split(`/`);
+        if (types.includes(actions[0]) && actions[1] === `list`){
+          request--;
+          const datas = messageData[`${actions[0]}s`];
+          extractedTargets[actions[0]].forEach((extractedTarget) => {
+            const points = datas.map(data => [this.__extractValue(data, extractedTarget), +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
+            results.push({
+              target : actions[0],
+              datapoints : points
+            })
+          })
+          if (!request){
+            this.__socket.removeEventListener(`message`, commandNotificationHandler);
+            resolve({
+              data : results
+            })
+          }
         }
       }
-
-      this.__socket.addEventListener(`message`, commandNotificationHandler)
-    });
+      this.__socket.addEventListener(`message`, commandNotificationHandler);
+      types.forEach(type => 
+        this.__socket.send(JSON.stringify({
+          action : `${type}/list`,
+          deviceId : deviceId
+        }))
+      );
+    })
   }
 
   __tokenMessage(messageData){
@@ -86,7 +106,7 @@ export default class DeviceHiveClient {
 
   __extractValue(object, path){
     let current = object;
-    const fields = path.split(`.`);
+    const fields = path.split(/[\.\[\]]/).filter(elem => elem !== ``);
     fields.forEach(field => {
       if (current[field] !== undefined){
         current = current[field];
