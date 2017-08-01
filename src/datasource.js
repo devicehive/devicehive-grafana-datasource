@@ -12,14 +12,24 @@ export class GenericDatasource {
     
     this.q = $q;
     if (instanceSettings.jsonData){
-      this.dhClientPromise = new DeviceHiveClient({
-        login : instanceSettings.jsonData.auth.login,
-        password : instanceSettings.jsonData.auth.password,
-        serverURL : instanceSettings.jsonData.serverURL
-      })
-      .then(dhClient => {
-        this.dhClient = dhClient;
-      });
+      if (instanceSettings.jsonData.authType === `Login/Password`){
+        this.dhClientPromise = new DeviceHiveClient({
+          login : instanceSettings.jsonData.auth.login,
+          password : instanceSettings.jsonData.auth.password,
+          serverURL : instanceSettings.jsonData.serverURL
+        })
+        .then(dhClient => {
+          this.dhClient = dhClient;
+        });
+      } else if (instanceSettings.jsonData.authType === `Token`){
+        this.dhClientPromise = new DeviceHiveClient({
+          token : instanceSettings.jsonData.auth.token,
+          serverURL : instanceSettings.jsonData.serverURL
+        })
+        .then(dhClient => {
+          this.dhClient = dhClient;
+        });
+      }
     }
   }
 

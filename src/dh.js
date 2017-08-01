@@ -1,13 +1,17 @@
 import moment from 'moment';
 
 export default class DeviceHiveClient {
-  constructor({ login, password, serverURL }){
-    if (serverURL && login && password) {
+  constructor({ login, password, serverURL, token }){
+    if (serverURL && ((login && password) || token )) {
       this.__socket = new WebSocket(serverURL);
       return new Promise((resolve) => {
         this.__socket.addEventListener(`open`, (event) => {
           resolve(this);
-          this.createTokenPair(login, password);
+          if (!token){
+            this.createTokenPair(login, password);
+          } else {
+            this.__authenticate(token);
+          }
           this.__socket.addEventListener(`message`, (event) => {
             const messageData = JSON.parse(event.data);
             if ((messageData.action === `token` || messageData.action === `authenticate`) && messageData.status === `success`){
@@ -28,7 +32,7 @@ export default class DeviceHiveClient {
         })
       })
     } else {
-      throw new Error(`You need to specify URL, login and password`);
+      throw new Error(`You need to specify URL, login and password or token`);
     }
   }
 
