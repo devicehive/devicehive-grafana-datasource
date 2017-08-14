@@ -17,26 +17,41 @@ export class GenericDatasource {
     
     this.q = $q;
     if (instanceSettings.jsonData){
-      if (instanceSettings.jsonData.authType === `Login/Password`){
-        this.dhClientPromise = new DeviceHiveClient({
-          login : instanceSettings.jsonData.auth.login,
-          password : instanceSettings.jsonData.auth.password,
-          serverURL : instanceSettings.jsonData.serverURL
-        })
-        .then(dhClient => {
-          this.dhClient = dhClient;
-          return dhClient;
-        });
-      } else if (instanceSettings.jsonData.authType === `Token`){
-        this.dhClientPromise = new DeviceHiveClient({
-          token : instanceSettings.jsonData.auth.token,
-          serverURL : instanceSettings.jsonData.serverURL
-        })
-        .then(dhClient => {
-          this.dhClient = dhClient;
-          return dhClient;
-        });
+      if (instanceSettings.jsonData.authType === `Login/Password` || instanceSettings.jsonData.authType === `Token`){
+        this.authenticate(this.jsonData.authType, this.jsonData.auth, this.jsonData.serverURL);
       }
+    }
+  }
+
+  /**
+   * Authenticates user
+   * 
+   * @param {String} type 
+   * @param {Object} auth 
+   * @param {String} url 
+   * @returns 
+   * @memberof GenericDatasource
+   */
+  authenticate(type, auth, url){
+    if (type === `Login/Password`){
+      return this.dhClientPromise = new DeviceHiveClient({
+        login : auth.login,
+        password : auth.password,
+        serverURL : url
+      })
+      .then(dhClient => {
+        this.dhClient = dhClient;
+        return dhClient;
+      });
+    } else if (type === `Token`){
+      return this.dhClientPromise = new DeviceHiveClient({
+        token : auth.token,
+        serverURL : url
+      })
+      .then(dhClient => {
+        this.dhClient = dhClient;
+        return dhClient;
+      });
     }
   }
 
@@ -48,11 +63,22 @@ export class GenericDatasource {
    * @memberof GenericDatasource
    */
   query(options) {
-    return this.dhClient
-      .queryData(options.targets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
+    if (this.dhClient){
+      return this.dhClient
+        .queryData(options.targets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
+        .then(result => {
+          return result;
+        });
+    } else {
+      return this.authenticate(this.jsonData.authType, this.jsonData.auth, this.jsonData.serverURL)
+      .then(dhClient => dhClient.testDatasource())
+      .then(() => {
+        return this.dhClient.queryData(options.targets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
+      })
       .then(result => {
         return result;
       });
+    }
   }
 
   /**
