@@ -1,65 +1,60 @@
-## Grafana Datasource for DeviceHive
+# Grafana Datasource for DeviceHive 
 
 Currently in development.
 
+This datasource was created to connect Grafana with DeviceHive to track commands and notifications by particular device.
+
 Based on Grafana Simple JSON Datasource plugin.
-<!-- ## Simple JSON Datasource - a generic backend datasource
 
-More documentation about datasource plugins can be found in the [Docs](https://github.com/grafana/grafana/blob/master/docs/sources/plugins/developing/datasources.md).
+## Adding the data source to Grafana
 
-This also serves as a living example implementation of a datasource.
+Prerequisites: You should have Grafana, npm and yarn installed and have permissions to copy data to Plugins folder(you could set it in `grafana.ini` in `Paths->plugins`).
 
-Your backend needs to implement 4 urls:
+1. Clone this repo to Plugins folder - `git clone https://github.com/devicehive/devicehive-grafana-datasource.git`;
+2. Go into folder - `cd devicehive-grafana-datasource`;
+3. Install all packages - `yarn install`;
+4. Build plugin - `npm run build`;
+5. Restart Grafana - `sudo service grafana-server restart`;
+6. Open Grafana in any browser;
+7. Open the side menu by clicking the Grafana icon in the top header;
+8. In the side menu click `Data Sources`;
+9. Click the `+ Add data source` in the top header;
+10. Select `DeviceHive` from the `Type` dropdown;
+11. Configure datasource.
 
- * `/` should return 200 ok. Used for "Test connection" on the datasource config page.
- * `/search` used by the find metric options on the query tab in panels.
- * `/query` should return metrics based on input.
- * `/annotations` should return annotations.
+## Using the data source in Dashboards
 
-### Example backend implementations
-- https://github.com/bergquist/fake-simple-json-datasource
+1. Open Grafana in any browser;
+2. Open the side menu by clicking the Grafana icon in the top header;
+3. In the side menu find `Dashboards` and in context menu click `+ New`;
+4. Select Panel type from top header. Currently this plugin wirks fine with `Graph` and `Singlestat` types.
+5. Click on `Panel Title` and choose `Edit`;
+6. In `Metrics` tab choose your data source name from `Panel Data Source`;
+7. Choose metric type from dropdown (`command` or `notification`);
+8. Type path to variable inside command in input. (Remember you could use object and arrays inside it, f.e. `parameters.testData[0].temperature`);
+9. Click time range burron in the top header on the right.
+10. Type `now-2m` in `From` text field, choose refreshing option from dropdown and click `Apply`. (Remember cache is available for last 2 minutes only)
 
-### Query API
+## Development
 
-Example `timeserie` request
-``` javascript
-{
-  "panelId": 1,
-  "range": {
-    "from": "2016-10-31T06:33:44.866Z",
-    "to": "2016-10-31T12:33:44.866Z",
-    "raw": {
-      "from": "now-6h",
-      "to": "now"
-    }
-  },
-  "rangeRaw": {
-    "from": "now-6h",
-    "to": "now"
-  },
-  "interval": "30s",
-  "intervalMs": 30000,
-  "targets": [
-     { "target": "upper_50", "refId": "A", "type": "timeserie" },
-     { "target": "upper_75", "refId": "B", "type": "timeserie" }
-  ],
-  "format": "json",
-  "maxDataPoints": 550
-}
-```
+This section is for development purposes only.
 
-Example `timeserie` response
+General documentation about datasource plugins can be found in the [Docs](https://github.com/grafana/grafana/blob/master/docs/sources/plugins/developing/datasources.md).<br>
+There are some prerequisites plugin should have to work with Grafana, you could find them in abovementioned docs.
+
+Response from query should have this kind of shape:
+
 ``` javascript
 [
   {
-    "target":"upper_75", // The field being queried for
+    "target":"command", // The field being queried for
     "datapoints":[
       [622,1450754160000],  // Metric value as a float , unixtimestamp in milliseconds
       [365,1450754220000]
     ]
   },
   {
-    "target":"upper_90",
+    "target":"notification",
     "datapoints":[
       [861,1450754160000],
       [767,1450754220000]
@@ -67,117 +62,3 @@ Example `timeserie` response
   }
 ]
 ```
-
-If the metric selected is `"type": "table"`, an example `table` response:
-```json
-[
-  {
-    "columns":[
-      {"text":"Time","type":"time"},
-      {"text":"Country","type":"string"},
-      {"text":"Number","type":"number"}
-    ],
-    "rows":[
-      [1234567,"SE",123],
-      [1234567,"DE",231],
-      [1234567,"US",321]
-    ],
-    "type":"table"
-  }
-]
-```
-
-### Annotation API
-
-The annotation request from the Simple JSON Datasource is a POST request to
-the /annotations endpoint in your datasource. The JSON request body looks like this:
-``` javascript
-{
-  "range": {
-    "from": "2016-04-15T13:44:39.070Z",
-    "to": "2016-04-15T14:44:39.070Z"
-  },
-  "rangeRaw": {
-    "from": "now-1h",
-    "to": "now"
-  },
-  "annotation": {
-    "name": "deploy",
-    "datasource": "Simple JSON Datasource",
-    "iconColor": "rgba(255, 96, 96, 1)",
-    "enable": true,
-    "query": "#deploy"
-  }
-}
-```
-
-Grafana expects a response containing an array of annotation objects in the
-following format:
-
-``` javascript
-[
-  {
-    annotation: annotation, // The original annotation sent from Grafana.
-    time: time, // Time since UNIX Epoch in milliseconds. (required)
-    title: title, // The title for the annotation tooltip. (required)
-    tags: tags, // Tags for the annotation. (optional)
-    text: text // Text for the annotation. (optional)
-  }
-]
-```
-
-Note: If the datasource is configured to connect directly to the backend, you
-also need to implement an OPTIONS endpoint at /annotations that responds
-with the correct CORS headers:
-
-```
-Access-Control-Allow-Headers:accept, content-type
-Access-Control-Allow-Methods:POST
-Access-Control-Allow-Origin:*
-```
-
-### Search API
-
-Example request
-``` javascript
-{ target: 'upper_50' }
-```
-
-The search api can either return an array or map.
-
-Example array response
-``` javascript
-["upper_25","upper_50","upper_75","upper_90","upper_95"]
-```
-
-Example map response
-``` javascript
-[ { "text" :"upper_25", "value": 1}, { "text" :"upper_75", "value": 2} ]
-```
-
-### Dev setup
-
-This plugin requires node 6.10.0
-
-`npm install -g yarn`
-`yarn install`
-`npm run build`
-
-### Changelog
-
-1.2.4
- - Add support returning sets in the search endpoint
-
-1.2.3
- - Allow nested templates in find metric query. #23
-
-1.2.2
- - Dont execute hidden queries
- - Template support for metrics queries
- - Template support for annotation queries
-
-### If using Grafana 2.6
-NOTE!
-for grafana 2.6 please use [this version](https://github.com/grafana/simple-json-datasource/commit/b78720f6e00c115203d8f4c0e81ccd3c16001f94)
-
-Copy the data source you want to /public/app/plugins/datasource/. Then restart grafana-server. The new data source should now be available in the data source type dropdown in the Add Data Source View. -->

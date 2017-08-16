@@ -1,32 +1,34 @@
-import {QueryCtrl} from 'app/plugins/sdk';
 import './css/query-editor.css!'
+import { QueryCtrl } from 'app/plugins/sdk';
 
 export class GenericDatasourceQueryCtrl extends QueryCtrl {
 
-  constructor($scope, $injector, uiSegmentSrv)  {
+  /**
+   * Creates an instance of GenericDatasourceQueryCtrl.
+   * @param {any} $scope 
+   * @param {any} $injector 
+   * @param {any} uiSegmentSrv 
+   * @memberof GenericDatasourceQueryCtrl
+   */
+  constructor($scope, $injector, uiSegmentSrv){
     super($scope, $injector);
 
     this.scope = $scope;
     this.uiSegmentSrv = uiSegmentSrv;
-    this.target.target = this.target.target || 'select metric';
-    this.target.type = this.target.type || 'command';
-    this.target.dataPath = this.target.dataPath || '';
+    this.target.target = this.target.target || `select metric`;
+    this.target.type = this.target.type || `command`;
+    this.target.dataPath = this.target.dataPath || ``;
   }
 
-  // getOptions() {
-    // return this.datasource.metricFindQuery(this.target)
-      // .then(this.uiSegmentSrv.transformToSegments(false));
-      // Options have to be transformed by uiSegmentSrv to be usable by metric-segment-model directive
-  // }
-
-  toggleEditorMode() {
-    this.target.rawQuery = !this.target.rawQuery;
-  }
-
+  /**
+   * Refresh data every time query params change.
+   * 
+   * @memberof GenericDatasourceQueryCtrl
+   */
   onChangeInternal() {
-    this.panelCtrl.refresh(); // Asks the panel to refresh data.
+    this.panelCtrl.refresh();
   }
 }
 
-GenericDatasourceQueryCtrl.templateUrl = 'partials/query.editor.html';
+GenericDatasourceQueryCtrl.templateUrl = `partials/query.editor.html`;
 

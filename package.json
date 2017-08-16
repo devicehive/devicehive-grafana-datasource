@@ -1,21 +1,20 @@
 {
-  "name": "grafana-devicehive-datasource",
+  "name": "devicehive-grafana-datasource",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/grunt-cli/bin/grunt",
-    "test": "./node_modules/grunt-cli/bin/grunt mochaTest"
+    "build": "./node_modules/grunt-cli/bin/grunt"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grafana/simple-json-datasource.git"
+    "url": "git+https://github.com/devicehive/devicehive-grafana-datasource"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/grafana/simple-json-datasource/issues"
+    "url": "https://github.com/devicehive/devicehive-grafana-datasource/issues"
   },
   "engines": {
     "node": "6.10.0"
@@ -47,5 +46,5 @@
     "mocha": "^3.2.0",
     "moment": "^2.18.1"
   },
-  "homepage": "https://github.com/grafana/simple-json-datasource#readme"
+  "homepage": "https://github.com/devicehive/devicehive-grafana-datasource#readme"
 }

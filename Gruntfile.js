@@ -66,15 +66,6 @@ module.exports = function(grunt) {
           ext:'.js'
         }]
       }
-    },
-
-    mochaTest: {
-      test: {
-        options: {
-          reporter: 'spec'
-        },
-        src: ['dist/test/spec/test-main.js', 'dist/test/spec/*_spec.js']
-      }
     }
   });
 
