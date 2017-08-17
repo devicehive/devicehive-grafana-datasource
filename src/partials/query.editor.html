@@ -5,7 +5,11 @@
     </div>
 
     <div class="gf-form">
-      <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false" ng-blur="ctrl.onChangeInternal()" />
+      <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false" ng-blur="ctrl.onChangeInternal()" placeholder="Path: (parameters...)"/>
     </div> 
+
+    <div class="gf-form">
+      <input class="gf-form-input" ng-model="ctrl.target.scale" spellcheck="false" ng-blur="ctrl.onChangeInternal()" placeholder="Scale (0.."/>
+    </div>
   </div>
 </query-editor-row>
