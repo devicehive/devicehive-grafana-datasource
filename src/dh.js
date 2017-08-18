@@ -54,13 +54,13 @@ export default class DeviceHiveClient {
         .slice(0)
         .reduce((obj, item) => {
           if (!obj[item.type]){
-            obj[item.type] = [{ path : item.dataPath, scale : item.scale }];
+            obj[item.type] = [{ path : item.dataPath, scale : item.scale === `` ? 1 : item.scale }];
           } else {
             obj[item.type] = [
               ...obj[item.type],
               {
                 path : item.dataPath,
-                scale : item.scale
+                scale : item.scale === `` ? 1 : item.scale
               }
             ];
           }
