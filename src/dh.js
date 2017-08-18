@@ -1,4 +1,5 @@
 import moment from 'moment';
+import sendRequest from './utils';
 
 export default class DeviceHiveClient {
   /**
@@ -6,18 +7,22 @@ export default class DeviceHiveClient {
    * @param {Object} { login, password, serverURL, token } 
    * @memberof DeviceHiveClient
    */
-  constructor({ login, password, serverURL, token }){
-    if (serverURL && ((login && password) || token )) {
-      this.__socket = new WebSocket(serverURL);
-      this.authInfo = {
-        login,
-        password,
-        token
-      };
+  constructor({ login, password, serverURL, token, refresh }){
+    if (serverURL && ((login && password) || (token && refresh ))) {
       return new Promise((resolve) => {
-        this.__socket.addEventListener(`open`, (event) => {
+        this.serverURL = serverURL;
+        if (token && refresh){
+          this.access = token;
+          this.refresh = refresh;
           resolve(this);
-        })
+        } else {
+          this.__createTokenPair(login, password)
+          .then(({ accessToken, refreshToken }) => {
+            this.access = accessToken;
+            this.refresh = refreshToken;
+            resolve(this);
+          })
+        }
       })
     } else {
       throw new Error(`You need to specify URL, login and password or token`);
@@ -31,12 +36,66 @@ export default class DeviceHiveClient {
    * @param {String} password 
    * @memberof DeviceHiveClient
    */
-  createTokenPair(login, password){
-    this.__socket.send(JSON.stringify({
-      action : `token`,
-      login,
-      password
-    }));
+  __createTokenPair(login, password){
+    return sendRequest({
+      apiURL : this.serverURL,
+      endpoint : `/token`,
+      method : `POST`,
+      body : {
+        login,
+        password
+      },
+      authorize : false
+    });
+  }
+
+  /**
+   * Gets commands or notifications by device
+   * 
+   * @param {String} deviceId 
+   * @param {String} type 
+   * @returns 
+   * @memberof DeviceHiveClient
+   */
+  __getCommandsNotifications(deviceId, type){
+    return sendRequest({
+      apiURL : this.serverURL,
+      endpoint : `/device/${deviceId}/${type}`,
+      access : this.access
+    })
+  }
+
+  /**
+   * Function to check authorization.
+   * 
+   * @param {Function} func 
+   * @param {Array} args 
+   * @returns 
+   */
+  __callAuthorized(func, ...args){
+    return func(...args)
+      .catch(error => {
+        return this.__refreshToken()
+          .then(() => func(...args));
+      })
+  }
+
+  /**
+   * Refresh access token
+   * 
+   * @returns 
+   * @memberof DeviceHiveClient
+   */
+  __refreshToken(){
+    return sendRequest({
+      apiURL : this.serverURL,
+      endpoint : `/token/refresh`,
+      method : `POST`,
+      body : {
+        refreshToken : this.refresh
+      },
+      authorize : false
+    })
   }
 
   /**
@@ -69,34 +128,24 @@ export default class DeviceHiveClient {
       const types = Object.keys(extractedTargets);
       const results = [];
       let request = types.length;
-      const commandNotificationHandler = (event) => {
-        const messageData = JSON.parse(event.data);
-        const actions = messageData.action.split(`/`);
-        if (types.includes(actions[0]) && actions[1] === `list`){
+      types.forEach(type => {
+        this.__callAuthorized(this.__getCommandsNotifications.bind(this), deviceId, type)
+        .then(resp => {
           request--;
-          const datas = messageData[`${actions[0]}s`];
-          extractedTargets[actions[0]].forEach(({ path, scale }) => {
-            const points = datas.map(data => [this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
+          extractedTargets[type].forEach(({ path, scale }) => {
+            const points = resp.map(data => [this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
             results.push({
-              target : actions[0],
+              target : type,
               datapoints : points
             })
           })
           if (!request){
-            this.__socket.removeEventListener(`message`, commandNotificationHandler);
             resolve({
               data : results
             })
           }
-        }
-      }
-      this.__socket.addEventListener(`message`, commandNotificationHandler);
-      types.forEach(type => 
-        this.__socket.send(JSON.stringify({
-          action : `${type}/list`,
-          deviceId : deviceId
-        }))
-      );
+        })
+      })
     })
   }
 
@@ -107,61 +156,11 @@ export default class DeviceHiveClient {
    * @memberof DeviceHiveClient
    */
   testDatasource(){
-    return new Promise((resolve, reject) => {
-      if (!this.authInfo.token){
-        this.createTokenPair(this.authInfo.login, this.authInfo.password);
-      } else {
-        this.__authenticate(this.authInfo.token);
-      }
-      const authHandler = (event) => {
-        const messageData = JSON.parse(event.data);
-        if ((messageData.action === `token` || messageData.action === `authenticate`) && messageData.status === `success`){
-          switch (messageData.action) {
-          case `token` : 
-            return this.__tokenMessage(messageData)
-            .then((accessToken) => this.__authenticate(accessToken));
-          case `authenticate`:
-            this.__socket.removeEventListener(`message`, authHandler);
-            return resolve();
-          }
-        } else {
-          if (messageData.status === `error`){
-            console.log(messageData);
-            this.__socket.removeEventListener(`message`, authHandler);
-            reject(messageData);
-          }
-        }
-      }
-      this.__socket.addEventListener(`message`, authHandler);
+    return sendRequest({
+      apiURL : this.serverURL,
+      endpoint : `/info`,
+      authorize : false
     })
-  }
-
-  /**
-   * Internal handler on `token` type message
-   * 
-   * @param {Object} messageData 
-   * @returns 
-   * @memberof DeviceHiveClient
-   */
-  __tokenMessage(messageData){
-    this.tokens = {
-      accessToken : messageData.accessToken,
-      refreshToken : messageData.refreshToken
-    }
-    return Promise.resolve(this.tokens.accessToken);
-  }
-  
-  /**
-   * Internal `authenticate` message sender
-   * 
-   * @param {String} accessToken 
-   * @memberof DeviceHiveClient
-   */
-  __authenticate(accessToken){
-    this.__socket.send(JSON.stringify({
-      action : `authenticate`,
-      token : accessToken
-    }));
   }
 
   /**

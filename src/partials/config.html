@@ -32,3 +32,8 @@
   <label class="gf-form-label width-7">Token</label>
   <input type="text" class="gf-form-input max-width-23" ng-model="ctrl.current.jsonData.auth.token" spellcheck="false" placeholder="a1b2c3..."/>
 </div>
+
+<div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Token"'>
+  <label class="gf-form-label width-7">Refresh</label>
+  <input type="text" class="gf-form-input max-width-23" ng-model="ctrl.current.jsonData.auth.refresh" spellcheck="false" placeholder="a1b2c3..."/>
+</div>

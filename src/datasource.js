@@ -46,6 +46,7 @@ export class GenericDatasource {
     } else if (type === `Token`){
       return this.dhClientPromise = new DeviceHiveClient({
         token : auth.token,
+        refresh : auth.refresh,
         serverURL : url
       })
       .then(dhClient => {
