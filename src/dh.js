@@ -96,6 +96,10 @@ export default class DeviceHiveClient {
       },
       authorize : false
     })
+    .then(({ accessToken }) => {
+      this.access = accessToken;
+      return { accessToken };
+    })
   }
 
   /**
