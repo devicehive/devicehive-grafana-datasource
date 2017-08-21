@@ -18,6 +18,7 @@ export class GenericDatasourceQueryCtrl extends QueryCtrl {
     this.target.target = this.target.target || `select metric`;
     this.target.type = this.target.type || `command`;
     this.target.dataPath = this.target.dataPath || ``;
+    this.target.scale = this.target.scale || 1;
   }
 
   /**
