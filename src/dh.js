@@ -117,13 +117,14 @@ export default class DeviceHiveClient {
         .slice(0)
         .reduce((obj, item) => {
           if (!obj[item.type]){
-            obj[item.type] = [{ path : item.dataPath, scale : item.scale === `` ? 1 : item.scale }];
+            obj[item.type] = [{ path : item.dataPath, scale : item.scale === `` ? 1 : item.scale, refId : item.refId }];
           } else {
             obj[item.type] = [
               ...obj[item.type],
               {
                 path : item.dataPath,
-                scale : item.scale === `` ? 1 : item.scale
+                scale : item.scale === `` ? 1 : item.scale,
+                refId : item.refId
               }
             ];
           }
@@ -139,7 +140,7 @@ export default class DeviceHiveClient {
           extractedTargets[type].forEach(({ path, scale }) => {
             const points = resp.map(data => [this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
             results.push({
-              target : type,
+              target : `${type}${refId}`,
               datapoints : points
             })
           })
