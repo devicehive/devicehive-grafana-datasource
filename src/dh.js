@@ -54,13 +54,14 @@ export default class DeviceHiveClient {
         .slice(0)
         .reduce((obj, item) => {
           if (!obj[item.type]){
-            obj[item.type] = [{ path : item.dataPath, scale : item.scale === `` ? 1 : item.scale }];
+            obj[item.type] = [{ path : item.dataPath, scale : item.scale === `` ? 1 : item.scale, refId : item.refId }];
           } else {
             obj[item.type] = [
               ...obj[item.type],
               {
                 path : item.dataPath,
-                scale : item.scale === `` ? 1 : item.scale
+                scale : item.scale === `` ? 1 : item.scale,
+                refId : item.refId
               }
             ];
           }
@@ -75,10 +76,10 @@ export default class DeviceHiveClient {
         if (types.includes(actions[0]) && actions[1] === `list`){
           request--;
           const datas = messageData[`${actions[0]}s`];
-          extractedTargets[actions[0]].forEach(({ path, scale }) => {
+          extractedTargets[actions[0]].forEach(({ path, scale, refId }) => {
             const points = datas.map(data => [this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
             results.push({
-              target : actions[0],
+              target : `${actions[0]}${refId}`,
               datapoints : points
             })
           })
