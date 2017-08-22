@@ -137,7 +137,7 @@ export default class DeviceHiveClient {
         this.__callAuthorized(this.__getCommandsNotifications.bind(this), deviceId, type)
         .then(resp => {
           request--;
-          extractedTargets[type].forEach(({ path, scale }) => {
+          extractedTargets[type].forEach(({ path, scale, refId }) => {
             const points = resp.map(data => [this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
             results.push({
               target : `${type}${refId}`,
