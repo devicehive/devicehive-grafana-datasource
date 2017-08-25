@@ -138,7 +138,7 @@ export default class DeviceHiveClient {
         .then(resp => {
           request--;
           extractedTargets[type].forEach(({ path, scale, refId }) => {
-            const points = resp.map(data => [this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
+            const points = resp.map(data => [this.__extractValue(data, path) ? this.__extractValue(data, path) * scale : null, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
             results.push({
               target : `${type}${refId}`,
               datapoints : points
@@ -182,6 +182,8 @@ export default class DeviceHiveClient {
     fields.forEach(field => {
       if (current[field] !== undefined){
         current = current[field];
+      } else {
+        current = null;
       }
     })
     return current;
