@@ -8,12 +8,14 @@ export class GenericDatasource {
    * @param {any} $q 
    * @memberof GenericDatasource
    */
-  constructor(instanceSettings, $q) {
+  constructor(instanceSettings, $q, backendSrv, templateSrv) {
     this.type = instanceSettings.type;
     this.url = instanceSettings.url;
     this.name = instanceSettings.name;
     this.jsonData = instanceSettings.jsonData;
     this.dhClientPromise = null;
+    this.backendSrv = backendSrv;
+    this.templateSrv = templateSrv;
     
     this.q = $q;
     if (instanceSettings.jsonData){
@@ -63,9 +65,19 @@ export class GenericDatasource {
    * @memberof GenericDatasource
    */
   query(options) {
+    const newTargets = [];
+    options.targets.forEach(target => {
+      const execResults = this.templateSrv._regex.exec(target.dataPath);
+      newTargets.push({
+        dataPath : target.dataPath.slice().replace(new RegExp("\\" + `${execResults[0]}`), this.templateSrv._index[execResults[1]].current.value),
+        scale : target.scale,
+        refId : target.refId,
+        type : target.type
+      });
+    })
     if (this.dhClient){
       return this.dhClient
-        .queryData(options.targets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
+        .queryData(newTargets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
         .then(result => {
           return result;
         });
@@ -73,7 +85,7 @@ export class GenericDatasource {
       return this.authenticate(this.jsonData.authType, this.jsonData.auth, this.jsonData.serverURL)
       .then(dhClient => dhClient.testDatasource())
       .then(() => {
-        return this.dhClient.queryData(options.targets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
+        return this.dhClient.queryData(newTargets, this.jsonData.deviceId, { from : options.range.from._d, to : options.range.to._d })
       })
       .then(result => {
         return result;
