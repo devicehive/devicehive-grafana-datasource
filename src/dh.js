@@ -77,11 +77,47 @@ export default class DeviceHiveClient {
           request--;
           const datas = messageData[`${actions[0]}s`];
           extractedTargets[actions[0]].forEach(({ path, scale, refId }) => {
-            const points = datas.map(data => [this.__extractValue(data, path) ? this.__extractValue(data, path) * scale : null, +moment.utc(data.timestamp).format(`x`)]).sort((a, b) => a[1] - b[1]);
-            results.push({
-              target : `${actions[0]}${refId}`,
-              datapoints : points
-            })
+            if (!path.includes(`Orient`)){
+              const points = [];
+              datas.forEach(data => {
+                if (typeof this.__extractValue(data, path) !== `object`){
+                  points.push([this.__extractValue(data, path) * scale, +moment.utc(data.timestamp).format(`x`)]);
+                }
+              });
+              points.sort((a, b) => a[1] - b[1]);
+              results.push({
+                target : `${actions[0]}${refId}`,
+                datapoints : points
+              })
+            } else {
+              const pointsX = [];
+              const pointsY = [];
+              const pointsZ = [];
+              datas.forEach(data => {
+                if (typeof this.__extractValue(data, path) !== `object`){
+                  const orient = this.__extractValue(data, path).split(`,`).map(value => +value);
+                  pointsX.push([Math.cos(orient[0]) * Math.cos(orient[1])]);
+                  pointsY.push([Math.sin(orient[0]) * Math.cos(orient[1])]);
+                  pointsZ.push([Math.sin(orient[1])]);
+                }
+              });
+              pointsX.sort((a, b) => a[1] - b[1]);
+              pointsY.sort((a, b) => a[1] - b[1]);
+              pointsZ.sort((a, b) => a[1] - b[1]);
+
+              results.push({
+                target : `${actions[0]}A`,
+                datapoints : [pointsX[0], [0]]
+              });
+              results.push({
+                target : `${actions[0]}B`,
+                datapoints : [pointsY[0], [0]]
+              });
+              results.push({
+                target : `${actions[0]}C`,
+                datapoints : [pointsZ[0], [0]]
+              });
+            }
           })
           if (!request){
             this.__socket.removeEventListener(`message`, commandNotificationHandler);
@@ -183,6 +219,6 @@ export default class DeviceHiveClient {
         current = null;
       }
     })
-    return current;
+    return (typeof current === `string` && !path.includes(`Orient`)) ? +current : current;
   }
 }
