@@ -95,10 +95,10 @@ export default class DeviceHiveClient {
               const pointsZ = [];
               datas.forEach(data => {
                 if (typeof this.__extractValue(data, path) !== `object`){
-                  const orient = this.__extractValue(data, path).split(`,`).map(value => +value);
-                  pointsX.push([Math.cos(orient[0]) * Math.cos(orient[1])]);
-                  pointsY.push([Math.sin(orient[0]) * Math.cos(orient[1])]);
-                  pointsZ.push([Math.sin(orient[1])]);
+                  const [azimuth, pitch, roll] = this.__extractValue(data, path).split(`,`).map(value => +value);
+                  pointsX.push([-Math.cos(azimuth)*Math.sin(pitch)*Math.sin(roll) - Math.sin(azimuth)*Math.cos(roll)]);
+                  pointsY.push([-Math.sin(azimuth)*Math.sin(pitch)*Math.sin(roll) + Math.cos(azimuth)*Math.cos(roll)]);
+                  pointsZ.push([Math.cos(pitch)*Math.sin(roll)]);
                 }
               });
               pointsX.sort((a, b) => a[1] - b[1]);
