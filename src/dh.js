@@ -96,9 +96,9 @@ export default class DeviceHiveClient {
               datas.forEach(data => {
                 if (typeof this.__extractValue(data, path) !== `object`){
                   const [azimuth, pitch, roll] = this.__extractValue(data, path).split(`,`).map(value => +value);
-                  pointsX.push([-Math.cos(azimuth)*Math.sin(pitch)*Math.sin(roll) - Math.sin(azimuth)*Math.cos(roll)]);
-                  pointsY.push([-Math.sin(azimuth)*Math.sin(pitch)*Math.sin(roll) + Math.cos(azimuth)*Math.cos(roll)]);
-                  pointsZ.push([Math.cos(pitch)*Math.sin(roll)]);
+                  pointsX.push([-Math.cos(azimuth)*Math.sin(pitch)*Math.sin(roll) - Math.sin(azimuth)*Math.cos(roll), +moment.utc(data.timestamp).format(`x`)]);
+                  pointsY.push([-Math.sin(azimuth)*Math.sin(pitch)*Math.sin(roll) + Math.cos(azimuth)*Math.cos(roll), +moment.utc(data.timestamp).format(`x`)]);
+                  pointsZ.push([Math.cos(pitch)*Math.sin(roll), +moment.utc(data.timestamp).format(`x`)]);
                 }
               });
               pointsX.sort((a, b) => a[1] - b[1]);
@@ -106,16 +106,16 @@ export default class DeviceHiveClient {
               pointsZ.sort((a, b) => a[1] - b[1]);
 
               results.push({
-                target : `${actions[0]}A`,
-                datapoints : [pointsX[0], [0]]
+                target : `X`,
+                datapoints : [[pointsX[0][0]], [0]]
               });
               results.push({
-                target : `${actions[0]}B`,
-                datapoints : [pointsY[0], [0]]
+                target : `Y`,
+                datapoints : [[pointsY[0][0]], [0]]
               });
               results.push({
-                target : `${actions[0]}C`,
-                datapoints : [pointsZ[0], [0]]
+                target : `Z`,
+                datapoints : [[pointsZ[0][0]], [0]]
               });
             }
           })
