@@ -96,9 +96,9 @@ export default class DeviceHiveClient {
               datas.forEach(data => {
                 if (typeof this.__extractValue(data, path) !== `object`){
                   const [azimuth, roll, pitch] = this.__extractValue(data, path).split(`,`).map(value => +value);
-                  pointsX.push([-Math.cos(azimuth)*Math.sin(pitch)*Math.sin(roll) - Math.sin(azimuth)*Math.cos(roll), +moment.utc(data.timestamp).format(`x`)]);
-                  pointsY.push([-Math.sin(azimuth)*Math.sin(pitch)*Math.sin(roll) + Math.cos(azimuth)*Math.cos(roll), +moment.utc(data.timestamp).format(`x`)]);
-                  pointsZ.push([Math.cos(pitch)*Math.sin(roll), +moment.utc(data.timestamp).format(`x`)]);
+                  pointsX.push([azimuth, +moment.utc(data.timestamp).format(`x`)]);
+                  pointsY.push([pitch, +moment.utc(data.timestamp).format(`x`)]);
+                  pointsZ.push([roll, +moment.utc(data.timestamp).format(`x`)]);
                 }
               });
               pointsX.sort((a, b) => a[1] - b[1]);
@@ -156,7 +156,7 @@ export default class DeviceHiveClient {
           switch (messageData.action) {
           case `token` : 
             return this.__tokenMessage(messageData)
-            .then((accessToken) => this.__authenticate(accessToken));
+              .then((accessToken) => this.__authenticate(accessToken));
           case `authenticate`:
             this.__socket.removeEventListener(`message`, authHandler);
             return resolve();
