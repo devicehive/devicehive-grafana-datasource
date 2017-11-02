@@ -195,9 +195,9 @@ System.register(['moment'], function (_export, _context) {
                               roll = _extractValue$split$2[1],
                               pitch = _extractValue$split$2[2];
 
-                          pointsX.push([-Math.cos(azimuth) * Math.sin(pitch) * Math.sin(roll) - Math.sin(azimuth) * Math.cos(roll), +moment.utc(data.timestamp).format('x')]);
-                          pointsY.push([-Math.sin(azimuth) * Math.sin(pitch) * Math.sin(roll) + Math.cos(azimuth) * Math.cos(roll), +moment.utc(data.timestamp).format('x')]);
-                          pointsZ.push([Math.cos(pitch) * Math.sin(roll), +moment.utc(data.timestamp).format('x')]);
+                          pointsX.push([azimuth, +moment.utc(data.timestamp).format('x')]);
+                          pointsY.push([pitch, +moment.utc(data.timestamp).format('x')]);
+                          pointsZ.push([roll, +moment.utc(data.timestamp).format('x')]);
                         }
                       });
                       pointsX.sort(function (a, b) {

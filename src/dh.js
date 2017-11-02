@@ -1,6 +1,7 @@
 import moment from 'moment';
 
-export default class DeviceHiveClient {
+class DeviceHiveClient {
+
   /**
    * Creates an instance of DeviceHiveClient.
    * @param {Object} { login, password, serverURL, token } 
@@ -222,3 +223,5 @@ export default class DeviceHiveClient {
     return (typeof current === `string` && !path.includes(`Orient`)) ? +current : current;
   }
 }
+
+export default DeviceHiveClient;

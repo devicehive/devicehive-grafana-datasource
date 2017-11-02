@@ -39,7 +39,8 @@ Prerequisites: You should have Grafana, npm and yarn installed and have permissi
 
 This section is for development purposes only.
 
-General documentation about datasource plugins can be found in the [Docs](https://github.com/grafana/grafana/blob/master/docs/sources/plugins/developing/datasources.md).<br>
+General documentation about datasource plugins can be found in the [Docs](https://github.com/grafana/grafana/blob/master/docs/sources/plugins/developing/datasources.md).
+
 There are some prerequisites plugin should have to work with Grafana, you could find them in abovementioned docs.
 
 Response from query should have this kind of shape:

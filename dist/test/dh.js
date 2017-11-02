@@ -140,9 +140,9 @@ var DeviceHiveClient = function () {
                         roll = _extractValue$split$2[1],
                         pitch = _extractValue$split$2[2];
 
-                    pointsX.push([-Math.cos(azimuth) * Math.sin(pitch) * Math.sin(roll) - Math.sin(azimuth) * Math.cos(roll), +_moment2.default.utc(data.timestamp).format('x')]);
-                    pointsY.push([-Math.sin(azimuth) * Math.sin(pitch) * Math.sin(roll) + Math.cos(azimuth) * Math.cos(roll), +_moment2.default.utc(data.timestamp).format('x')]);
-                    pointsZ.push([Math.cos(pitch) * Math.sin(roll), +_moment2.default.utc(data.timestamp).format('x')]);
+                    pointsX.push([azimuth, +_moment2.default.utc(data.timestamp).format('x')]);
+                    pointsY.push([pitch, +_moment2.default.utc(data.timestamp).format('x')]);
+                    pointsZ.push([roll, +_moment2.default.utc(data.timestamp).format('x')]);
                   }
                 });
                 pointsX.sort(function (a, b) {

@@ -1,10 +1,9 @@
 {
   "name": "DeviceHive",
-  "id": "devicehive-grafana-datasource",
+  "id": "devicehive-datasource",
   "type": "datasource",
 
   "partials": {
-    "config": "public/app/plugins/datasource/simplejson/partials/config.html"
   },
 
   "metrics": true,
@@ -29,7 +28,7 @@
   },
 
   "dependencies": {
-    "grafanaVersion": "3.x.x",
+    "grafanaVersion": "4.6.1",
     "plugins": [ ]
   }
 }
