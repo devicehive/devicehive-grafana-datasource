@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['./datasource', './query_ctrl'], function (_export, _context) {
+System.register(['./GenericDatasource', './GenericDatasourceQueryCtrl'], function (_export, _context) {
   "use strict";
 
   var GenericDatasource, GenericDatasourceQueryCtrl, GenericConfigCtrl, GenericQueryOptionsCtrl, GenericAnnotationsQueryCtrl;
@@ -12,10 +12,10 @@ System.register(['./datasource', './query_ctrl'], function (_export, _context) {
   }
 
   return {
-    setters: [function (_datasource) {
-      GenericDatasource = _datasource.GenericDatasource;
-    }, function (_query_ctrl) {
-      GenericDatasourceQueryCtrl = _query_ctrl.GenericDatasourceQueryCtrl;
+    setters: [function (_GenericDatasource) {
+      GenericDatasource = _GenericDatasource.default;
+    }, function (_GenericDatasourceQueryCtrl) {
+      GenericDatasourceQueryCtrl = _GenericDatasourceQueryCtrl.default;
     }],
     execute: function () {
       _export('ConfigCtrl', GenericConfigCtrl = function GenericConfigCtrl() {

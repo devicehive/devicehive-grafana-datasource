@@ -1,5 +1,5 @@
-import { GenericDatasource } from './datasource';
-import { GenericDatasourceQueryCtrl } from './query_ctrl';
+import GenericDatasource from './GenericDatasource';
+import GenericDatasourceQueryCtrl from './GenericDatasourceQueryCtrl';
 
 class GenericConfigCtrl {}
 GenericConfigCtrl.templateUrl = `partials/config.html`;

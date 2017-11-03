@@ -13,10 +13,9 @@ export class GenericDatasourceQueryCtrl extends QueryCtrl {
   constructor($scope, $injector, uiSegmentSrv){
     super($scope, $injector);
 
-    this.scope = $scope;
-    this.uiSegmentSrv = uiSegmentSrv;
     this.target.target = this.target.target || `select metric`;
     this.target.type = this.target.type || `command`;
+    this.target.name = this.target.name || ``;
     this.target.dataPath = this.target.dataPath || ``;
     this.target.scale = this.target.scale || 1;
   }
@@ -33,3 +32,5 @@ export class GenericDatasourceQueryCtrl extends QueryCtrl {
 
 GenericDatasourceQueryCtrl.templateUrl = `partials/query.editor.html`;
 
+
+export default GenericDatasourceQueryCtrl;

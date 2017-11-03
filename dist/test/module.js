@@ -5,9 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AnnotationsQueryCtrl = exports.QueryOptionsCtrl = exports.ConfigCtrl = exports.QueryCtrl = exports.Datasource = undefined;
 
-var _datasource = require('./datasource');
+var _GenericDatasource = require('./GenericDatasource');
 
-var _query_ctrl = require('./query_ctrl');
+var _GenericDatasource2 = _interopRequireDefault(_GenericDatasource);
+
+var _GenericDatasourceQueryCtrl = require('./GenericDatasourceQueryCtrl');
+
+var _GenericDatasourceQueryCtrl2 = _interopRequireDefault(_GenericDatasourceQueryCtrl);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -29,8 +35,8 @@ var GenericAnnotationsQueryCtrl = function GenericAnnotationsQueryCtrl() {
 
 GenericAnnotationsQueryCtrl.templateUrl = 'partials/annotations.editor.html';
 
-exports.Datasource = _datasource.GenericDatasource;
-exports.QueryCtrl = _query_ctrl.GenericDatasourceQueryCtrl;
+exports.Datasource = _GenericDatasource2.default;
+exports.QueryCtrl = _GenericDatasourceQueryCtrl2.default;
 exports.ConfigCtrl = GenericConfigCtrl;
 exports.QueryOptionsCtrl = GenericQueryOptionsCtrl;
 exports.AnnotationsQueryCtrl = GenericAnnotationsQueryCtrl;

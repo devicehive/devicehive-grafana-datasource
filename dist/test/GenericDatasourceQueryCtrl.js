@@ -32,10 +32,9 @@ var GenericDatasourceQueryCtrl = exports.GenericDatasourceQueryCtrl = function (
 
     var _this = _possibleConstructorReturn(this, (GenericDatasourceQueryCtrl.__proto__ || Object.getPrototypeOf(GenericDatasourceQueryCtrl)).call(this, $scope, $injector));
 
-    _this.scope = $scope;
-    _this.uiSegmentSrv = uiSegmentSrv;
     _this.target.target = _this.target.target || 'select metric';
     _this.target.type = _this.target.type || 'command';
+    _this.target.name = _this.target.name || '';
     _this.target.dataPath = _this.target.dataPath || '';
     _this.target.scale = _this.target.scale || 1;
     return _this;
@@ -59,4 +58,6 @@ var GenericDatasourceQueryCtrl = exports.GenericDatasourceQueryCtrl = function (
 }(_sdk.QueryCtrl);
 
 GenericDatasourceQueryCtrl.templateUrl = 'partials/query.editor.html';
-//# sourceMappingURL=query_ctrl.js.map
+
+exports.default = GenericDatasourceQueryCtrl;
+//# sourceMappingURL=GenericDatasourceQueryCtrl.js.map

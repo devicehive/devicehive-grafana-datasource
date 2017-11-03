@@ -1,6 +1,6 @@
 {
   "name": "DeviceHive",
-  "id": "devicehive-datasource",
+  "id": "devicehive-devicehive-datasource",
   "type": "datasource",
 
   "partials": {

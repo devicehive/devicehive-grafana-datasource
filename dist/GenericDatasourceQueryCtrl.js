@@ -73,10 +73,9 @@ System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_expor
 
           var _this = _possibleConstructorReturn(this, (GenericDatasourceQueryCtrl.__proto__ || Object.getPrototypeOf(GenericDatasourceQueryCtrl)).call(this, $scope, $injector));
 
-          _this.scope = $scope;
-          _this.uiSegmentSrv = uiSegmentSrv;
           _this.target.target = _this.target.target || 'select metric';
           _this.target.type = _this.target.type || 'command';
+          _this.target.name = _this.target.name || '';
           _this.target.dataPath = _this.target.dataPath || '';
           _this.target.scale = _this.target.scale || 1;
           return _this;
@@ -102,7 +101,9 @@ System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_expor
       _export('GenericDatasourceQueryCtrl', GenericDatasourceQueryCtrl);
 
       GenericDatasourceQueryCtrl.templateUrl = 'partials/query.editor.html';
+
+      _export('default', GenericDatasourceQueryCtrl);
     }
   };
 });
-//# sourceMappingURL=query_ctrl.js.map
+//# sourceMappingURL=GenericDatasourceQueryCtrl.js.map
