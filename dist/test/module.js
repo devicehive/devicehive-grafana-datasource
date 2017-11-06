@@ -25,6 +25,8 @@ GenericConfigCtrl.templateUrl = 'partials/config.html';
 
 var GenericQueryOptionsCtrl = function GenericQueryOptionsCtrl() {
   _classCallCheck(this, GenericQueryOptionsCtrl);
+
+  this.tabIndex = 0;
 };
 
 GenericQueryOptionsCtrl.templateUrl = 'partials/query.options.html';

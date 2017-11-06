@@ -71,12 +71,12 @@ var GenericDatasource = function () {
                     return me.deviceHive.send({
                         action: target.type + '/list',
                         deviceId: me.jsonData.deviceId,
-                        notification: me._processVariable(target.name),
-                        start: options.range.from.toDate(),
-                        end: options.range.to.toDate(),
+                        notification: me._processVariables(target.name),
+                        start: options.range.from.toDate().getTime(),
+                        end: options.range.to.toDate().getTime(),
                         sortField: 'timestamp',
-                        sortOrder: 'ASC ',
-                        take: 600,
+                        sortOrder: 'ASC',
+                        take: 10000,
                         skip: 0
                     });
                 }));
@@ -84,8 +84,8 @@ var GenericDatasource = function () {
                 return {
                     data: results.map(function (result, index) {
                         var type = options.targets[index].type;
-                        var scale = me._processVariable(options.targets[index].scale);
-                        var dataPath = me._processVariable(options.targets[index].dataPath);
+                        var scale = me._processVariables(options.targets[index].scale);
+                        var dataPath = me._processVariables(options.targets[index].dataPath);
                         var refId = options.targets[index].refId;
 
                         return {
@@ -120,37 +120,17 @@ var GenericDatasource = function () {
 
         /**
          *
-         * @param options
-         */
-
-    }, {
-        key: 'annotationQuery',
-        value: function annotationQuery(options) {}
-
-        /**
-         *
-         * @param options
-         */
-
-    }, {
-        key: 'metricFindQuery',
-        value: function metricFindQuery(options) {}
-
-        /**
-         *
-         * @param variable
+         * @param stringWithVariables
          * @return {*}
          * @private
          */
 
     }, {
-        key: '_processVariable',
-        value: function _processVariable(variable) {
+        key: '_processVariables',
+        value: function _processVariables(stringWithVariables) {
             var me = this;
 
-            return me.templateSrv.variableExists(variable) ? me.templateSrv.variables.find(function (variableObj) {
-                return variableObj.name === me.templateSrv.getVariableName(variable);
-            }).current.value : variable;
+            return me.templateSrv.replace('' + stringWithVariables);
         }
 
         /**
@@ -171,7 +151,7 @@ var GenericDatasource = function () {
             var current = object;
 
             fields.forEach(function (field) {
-                return current = current[field] ? current[field] : null;
+                return current = current && current[field] ? current[field] : null;
             });
 
             return current;

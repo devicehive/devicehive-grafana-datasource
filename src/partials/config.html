@@ -1,15 +1,23 @@
 <h3 class="page-heading">DeviceHive Configuration</h3>
 
 <div class="gf-form">
-  <label class="gf-form-label width-7">Server URL</label>
-  <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.serverURL" spellcheck="false" placeholder="ws://..." required/>
-  <img src="public/plugins/devicehive-grafana-datasource/img/tip.png" width="30" height="30">
+    <label class="gf-form-label width-9">Server URL
+        <info-popover mode="right-normal" position="top center">
+            Server URL information
+        </info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.serverURL" spellcheck="false"
+           placeholder="ws://..." required/>
 </div>
 
 <div class="gf-form">
-  <label class="gf-form-label width-7">Device ID</label>
-  <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.deviceId" spellcheck="false" placeholder="a1b2c3..." required/>
-  <img src="public/plugins/devicehive-grafana-datasource/img/tip.png" width="30" height="30">
+    <label class="gf-form-label width-9">Device ID
+        <info-popover mode="right-normal" position="top center">
+            Device ID information
+        </info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.deviceId" spellcheck="false"
+           placeholder="a1b2c3..." required/>
 </div>
 
 <br>
@@ -17,21 +25,55 @@
 <h3 class="page-heading">Authentication</h3>
 
 <div class="gf-form">
-  <label class="gf-form-label width-7">Auth Type</label>
-  <select class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.authType" ng-options="f as f for f in ['Login/Password', 'Token']"></select>
+    <label class="gf-form-label width-9">Auth Type
+        <info-popover mode="right-normal" position="top center">
+            Auth Type information
+        </info-popover>
+    </label>
+    <select class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.authType"
+            ng-options="f as f for f in ['Login/Password', 'Token']"></select>
 </div>
 
 <div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Login/Password"'>
-  <label class="gf-form-label width-7">Login</label>
-  <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.login" spellcheck="false" placeholder="testUser"/>
+    <label class="gf-form-label width-9">Login
+        <info-popover mode="right-normal" position="top center">
+            Login information
+        </info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.login" spellcheck="false"
+           placeholder="testUser"/>
 </div>
 
 <div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Login/Password"'>
-  <label class="gf-form-label width-7">Password</label>
-  <input type="password" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.password" spellcheck="false" placeholder="testPassword"/>
+    <label class="gf-form-label width-9">Password
+        <info-popover mode="right-normal" position="top center">
+            Password information
+        </info-popover>
+    </label>
+    <input type="password" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.password"
+           spellcheck="false" placeholder="testPassword"/>
 </div>
 
 <div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Token"'>
-  <label class="gf-form-label width-7">Token</label>
-  <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.token" spellcheck="false" placeholder="a1b2c3..."/>
+    <label class="gf-form-label width-9">Token
+        <info-popover mode="right-normal" position="top center">
+            Token information
+        </info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.token" spellcheck="false"
+           placeholder="a1b2c3..."/>
+</div>
+
+<br>
+
+<div class="gf-form-group">
+    <div class="grafana-info-box">
+        <h5>DeviceHive</h5>
+        <p>
+            Information about DeviceHive
+        </p>
+        <hr>
+        <a href="https://docs.devicehive.com/docs" target="_blank">Official documentation</a><br>
+        <a href="https://github.com/devicehive" target="_blank">GitHub</a>
+    </div>
 </div>

@@ -26,6 +26,8 @@ System.register(['./GenericDatasource', './GenericDatasourceQueryCtrl'], functio
 
       _export('QueryOptionsCtrl', GenericQueryOptionsCtrl = function GenericQueryOptionsCtrl() {
         _classCallCheck(this, GenericQueryOptionsCtrl);
+
+        this.tabIndex = 0;
       });
 
       GenericQueryOptionsCtrl.templateUrl = 'partials/query.options.html';

@@ -1,19 +1,77 @@
 <query-editor-row query-ctrl="ctrl" class="generic-datasource-query-row" has-text-edit-mode="true">
-  <div class="gf-form-inline">
-    <div class="gf-form max-width-12">
-      <select class="gf-form-input" ng-model="ctrl.target.type" ng-options="f as f for f in ['command', 'notification']" ng-change="ctrl.onChangeInternal()"></select>
+    <div class="gf-form-inline">
+        <div class="gf-form width-18">
+            <div class="gf-form-select-wrapper width-18 gf-form-select-wrapper--has-help-icon">
+                <select class="gf-form-input" ng-model="ctrl.target.type"
+                        ng-options="f as f for f in ['command', 'notification']"
+                        ng-change="ctrl.onChangeInternal()"></select>
+                <info-popover mode="right-absolute">Entity</info-popover>
+            </div>
+        </div>
+
+        <div class="gf-form width-18">
+            <div class="gf-form-input-wrapper width-18 gf-form-input-wrapper--has-help-icon">
+                <input class="gf-form-input" ng-model="ctrl.target.name" spellcheck="false"
+                       ng-blur="ctrl.onChangeInternal()" placeholder="{{ ctrl.target.type }} name"/>
+                <info-popover mode="right-absolute">Name</info-popover>
+            </div>
+        </div>
+
+        <div class="gf-form width-18">
+            <div class="gf-form-input-wrapper width-18 gf-form-input-wrapper--has-help-icon">
+                <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false"
+                       ng-blur="ctrl.onChangeInternal()" placeholder="Path: (parameters...)"/>
+                <info-popover mode="right-absolute">Data Path</info-popover>
+            </div>
+        </div>
+
+        <div class="gf-form width-18">
+            <div class="gf-form-input-wrapper width-18 gf-form-input-wrapper--has-help-icon">
+                <input class="gf-form-input" ng-model="ctrl.target.scale" spellcheck="false"
+                       ng-blur="ctrl.onChangeInternal()" placeholder="Scale (0.."/>
+                <info-popover mode="right-absolute">Scale</info-popover>
+            </div>
+        </div>
+
+        <div class="gf-form gf-form--grow">
+            <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+
+        <div class="gf-form">
+            <label class="gf-form-label width-7 query-keyword" ng-click="ctrl.showHelp = !ctrl.showHelp">
+                {{ ctrl.showHelp ? "Hide help" : "Show Help" }}
+                <i class="fa fa-caret-down" ng-show="ctrl.showHelp"></i>
+                <i class="fa fa-caret-right" ng-hide="ctrl.showHelp"></i>
+            </label>
+        </div>
+
     </div>
 
-    <div class="gf-form">
-      <input class="gf-form-input" ng-model="ctrl.target.name" spellcheck="false" ng-blur="ctrl.onChangeInternal()" placeholder="{{ ctrl.target.type }} name"/>
+    <div class="gf-form" ng-show="ctrl.showHelp">
+    <pre class="gf-form-pre alert alert-info help-information">
+        <div class="gf-form-inline">
+            <div>
+                <b>- Entity</b>
+                <b><i>Command</i></b>: represents a message dispatched by clients for devices
+                <b><i>Notification</i></b>: represents a message dispatched by devices for clients
+            </div>
+            <div class="gf-section">
+                <b>- Name</b>
+                    Name clarification
+            </div>
+            <div>
+              <b>- Data path</b>
+                Data path clarification
+            </div>
+            <div class="gf-section">
+              <b>- Scale</b>
+                Scale clarification
+            </div>
+        </div>
+      <hr>
+      <a href="https://docs.devicehive.com/docs" target="_blank">Official documentation</a>
+      <a href="https://github.com/devicehive" target="_blank">GitHub</a>
+    </pre>
     </div>
 
-    <div class="gf-form">
-      <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false" ng-blur="ctrl.onChangeInternal()" placeholder="Path: (parameters...)"/>
-    </div> 
-
-    <div class="gf-form">
-      <input class="gf-form-input" ng-model="ctrl.target.scale" spellcheck="false" ng-blur="ctrl.onChangeInternal()" placeholder="Scale (0.."/>
-    </div>
-  </div>
 </query-editor-row>

@@ -74,7 +74,8 @@ class DeviceHive {
         return  me.isAuthenticated ? Promise.resolve() : (me.token ?
             me.send({ action: `authenticate`, token: me.token }) :
             me.send({ action: `token`, login: me.login,  password: me.password })
-                .then(({ accessToken, refreshToken }) => me.authenticate({ token: accessToken })))
+                .then(({ accessToken, refreshToken }) => me.authenticate({ token: accessToken }))
+                .catch(() => me.authenticate({ login: me.login, password: me.password })))
             .then(() => me.isAuthenticated = true );
     }
 

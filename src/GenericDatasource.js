@@ -48,12 +48,12 @@ class GenericDatasource {
                 .map(target => me.deviceHive.send({
                     action: `${target.type}/list`,
                     deviceId: me.jsonData.deviceId,
-                    notification: me._processVariable(target.name),
-                    start: options.range.from.toDate(),
-                    end: options.range.to.toDate(),
+                    notification: me._processVariables(target.name),
+                    start: options.range.from.toDate().getTime(),
+                    end: options.range.to.toDate().getTime(),
                     sortField: `timestamp`,
-                    sortOrder: `ASC `,
-                    take: 600,
+                    sortOrder: `ASC`,
+                    take: 10000,
                     skip: 0
                 }))
             ))
@@ -61,8 +61,8 @@ class GenericDatasource {
                 return {
                     data: results.map((result, index) => {
                         const type = options.targets[index].type;
-                        const scale = me._processVariable(options.targets[index].scale);
-                        const dataPath = me._processVariable(options.targets[index].dataPath);
+                        const scale = me._processVariables(options.targets[index].scale);
+                        const dataPath = me._processVariables(options.targets[index].dataPath);
                         const refId = options.targets[index].refId;
 
                         return {
@@ -95,32 +95,14 @@ class GenericDatasource {
 
     /**
      *
-     * @param options
-     */
-    annotationQuery(options) {
-
-    }
-
-    /**
-     *
-     * @param options
-     */
-    metricFindQuery(options) {
-
-    }
-
-    /**
-     *
-     * @param variable
+     * @param stringWithVariables
      * @return {*}
      * @private
      */
-    _processVariable(variable) {
+    _processVariables(stringWithVariables) {
         const me = this;
 
-        return me.templateSrv.variableExists(variable) ? me.templateSrv.variables
-            .find((variableObj) => variableObj.name === me.templateSrv.getVariableName(variable)).current.value :
-            variable;
+        return me.templateSrv.replace(`${stringWithVariables}`);
     }
 
     /**
@@ -135,7 +117,7 @@ class GenericDatasource {
         const fields = path.split(/[\.\[\]]/).filter(elem => elem !== ``);
         let current = object;
 
-        fields.forEach(field => current = current[field] ? current[field] : null);
+        fields.forEach(field => current = current && current[field] ? current[field] : null);
 
         return current;
     }

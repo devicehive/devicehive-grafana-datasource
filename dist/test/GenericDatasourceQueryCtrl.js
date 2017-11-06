@@ -37,17 +37,23 @@ var GenericDatasourceQueryCtrl = exports.GenericDatasourceQueryCtrl = function (
     _this.target.name = _this.target.name || '';
     _this.target.dataPath = _this.target.dataPath || '';
     _this.target.scale = _this.target.scale || 1;
+    _this.target.showHelp = false;
     return _this;
   }
 
-  /**
-   * Refresh data every time query params change.
-   * 
-   * @memberof GenericDatasourceQueryCtrl
-   */
-
-
   _createClass(GenericDatasourceQueryCtrl, [{
+    key: 'getOptions',
+    value: function getOptions(query) {
+      return this.datasource.metricFindQuery(query || '');
+    }
+
+    /**
+     * Refresh data every time query params change.
+     * 
+     * @memberof GenericDatasourceQueryCtrl
+     */
+
+  }, {
     key: 'onChangeInternal',
     value: function onChangeInternal() {
       this.panelCtrl.refresh();

@@ -111,6 +111,8 @@ var DeviceHive = function () {
                 var accessToken = _ref3.accessToken,
                     refreshToken = _ref3.refreshToken;
                 return me.authenticate({ token: accessToken });
+            }).catch(function () {
+                return me.authenticate({ login: me.login, password: me.password });
             })).then(function () {
                 return me.isAuthenticated = true;
             });
