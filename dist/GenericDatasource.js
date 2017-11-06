@@ -83,17 +83,7 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                             return Promise.all(options.targets.filter(function (target) {
                                 return target.hide !== true;
                             }).map(function (target) {
-                                return me.deviceHive.send({
-                                    action: target.type + '/list',
-                                    deviceId: me.jsonData.deviceId,
-                                    notification: me._processVariables(target.name),
-                                    start: options.range.from.toDate().getTime(),
-                                    end: options.range.to.toDate().getTime(),
-                                    sortField: 'timestamp',
-                                    sortOrder: 'ASC',
-                                    take: 10000,
-                                    skip: 0
-                                });
+                                return me.deviceHive.send(me._generateRequestObject(target, options));
                             }));
                         }).then(function (results) {
                             return {
@@ -109,6 +99,24 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                                             return [me._extractValueByPath(target, dataPath) * (scale === '' ? 1 : scale), +moment.utc(target.timestamp).format('x')];
                                         })
                                     };
+                                })
+                            };
+                        });
+                    }
+                }, {
+                    key: 'annotationQuery',
+                    value: function annotationQuery(options) {
+                        var me = this;
+                        console.log(options.annotation);
+                        return me.deviceHive.authenticate().then(function () {
+                            return me.deviceHive.send(me._generateRequestObject(options.annotation, options));
+                        }).then(function (result) {
+                            var type = options.annotation.type;
+                            var dataPath = me._processVariables(options.annotation.dataPath);
+
+                            return {
+                                data: result[type + 's'].map(function (result, index) {
+                                    return me._extractValueByPath(result, dataPath);
                                 })
                             };
                         });
@@ -144,6 +152,24 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                         });
 
                         return current;
+                    }
+                }, {
+                    key: '_generateRequestObject',
+                    value: function _generateRequestObject(target, allOptions) {
+                        var me = this;
+                        var resultObj = {
+                            action: target.type + '/list',
+                            deviceId: me.jsonData.deviceId,
+                            start: allOptions.range.from.toDate().getTime(),
+                            end: allOptions.range.to.toDate().getTime(),
+                            sortField: 'timestamp',
+                            sortOrder: 'ASC',
+                            skip: 0
+                        };
+
+                        resultObj[target.type] = me._processVariables(target.name);
+
+                        return resultObj;
                     }
                 }]);
 

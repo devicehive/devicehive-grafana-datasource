@@ -41,19 +41,14 @@ var GenericDatasourceQueryCtrl = exports.GenericDatasourceQueryCtrl = function (
     return _this;
   }
 
+  /**
+   * Refresh data every time query params change.
+   * 
+   * @memberof GenericDatasourceQueryCtrl
+   */
+
+
   _createClass(GenericDatasourceQueryCtrl, [{
-    key: 'getOptions',
-    value: function getOptions(query) {
-      return this.datasource.metricFindQuery(query || '');
-    }
-
-    /**
-     * Refresh data every time query params change.
-     * 
-     * @memberof GenericDatasourceQueryCtrl
-     */
-
-  }, {
     key: 'onChangeInternal',
     value: function onChangeInternal() {
       this.panelCtrl.refresh();

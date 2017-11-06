@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.AnnotationsQueryCtrl = exports.QueryOptionsCtrl = exports.ConfigCtrl = exports.QueryCtrl = exports.Datasource = undefined;
 
@@ -18,21 +18,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenericConfigCtrl = function GenericConfigCtrl() {
-  _classCallCheck(this, GenericConfigCtrl);
+    _classCallCheck(this, GenericConfigCtrl);
 };
 
 GenericConfigCtrl.templateUrl = 'partials/config.html';
 
 var GenericQueryOptionsCtrl = function GenericQueryOptionsCtrl() {
-  _classCallCheck(this, GenericQueryOptionsCtrl);
-
-  this.tabIndex = 0;
+    _classCallCheck(this, GenericQueryOptionsCtrl);
 };
 
 GenericQueryOptionsCtrl.templateUrl = 'partials/query.options.html';
 
 var GenericAnnotationsQueryCtrl = function GenericAnnotationsQueryCtrl() {
-  _classCallCheck(this, GenericAnnotationsQueryCtrl);
+    _classCallCheck(this, GenericAnnotationsQueryCtrl);
+
+    this.type = this.type || 'command';
+    this.name = this.name || '';
+    this.dataPath = this.dataPath || '';
 };
 
 GenericAnnotationsQueryCtrl.templateUrl = 'partials/annotations.editor.html';

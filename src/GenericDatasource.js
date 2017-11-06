@@ -45,17 +45,7 @@ class GenericDatasource {
         return me.deviceHive.authenticate()
             .then(() => Promise.all(options.targets
                 .filter(target => target.hide !== true )
-                .map(target => me.deviceHive.send({
-                    action: `${target.type}/list`,
-                    deviceId: me.jsonData.deviceId,
-                    notification: me._processVariables(target.name),
-                    start: options.range.from.toDate().getTime(),
-                    end: options.range.to.toDate().getTime(),
-                    sortField: `timestamp`,
-                    sortOrder: `ASC`,
-                    take: 10000,
-                    skip: 0
-                }))
+                .map(target => me.deviceHive.send(me._generateRequestObject(target, options)))
             ))
             .then(results => {
                 return {
@@ -74,6 +64,28 @@ class GenericDatasource {
                                 ]
                             })
                         };
+                    })
+                }
+            });
+    }
+
+    /**
+     *
+     * @param options
+     * @returns {Promise.<TResult>}
+     */
+    annotationQuery(options) {
+        const me = this;
+        console.log(options.annotation);
+        return me.deviceHive.authenticate()
+            .then(() => me.deviceHive.send(me._generateRequestObject(options.annotation, options)))
+            .then(result => {
+                const type = options.annotation.type;
+                const dataPath = me._processVariables(options.annotation.dataPath);
+
+                return {
+                    data: result[`${type}s`].map((result, index) => {
+                        return me._extractValueByPath(result, dataPath);
                     })
                 }
             });
@@ -120,6 +132,30 @@ class GenericDatasource {
         fields.forEach(field => current = current && current[field] ? current[field] : null);
 
         return current;
+    }
+
+    /**
+     *
+     * @param target
+     * @param allOptions
+     * @returns {{action: string, deviceId: *, start: number, end: number, sortField: string, sortOrder: string, skip: number}}
+     * @private
+     */
+    _generateRequestObject(target, allOptions) {
+        const me = this;
+        const resultObj = {
+            action: `${target.type}/list`,
+            deviceId: me.jsonData.deviceId,
+            start: allOptions.range.from.toDate().getTime(),
+            end: allOptions.range.to.toDate().getTime(),
+            sortField: `timestamp`,
+            sortOrder: `ASC`,
+            skip: 0
+        };
+
+        resultObj[target.type] = me._processVariables(target.name);
+
+        return resultObj;
     }
 }
 
