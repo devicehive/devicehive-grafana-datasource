@@ -5,15 +5,15 @@ import DeviceHive from './DeviceHive';
 /**
  *
  */
-class GenericDatasource {
+class DeviceHiveDatasource {
 
     /**
-     * Creates an instance of GenericDatasource.
+     * Creates an instance of DeviceHiveDatasource.
      * @param {Object} instanceSettings
      * @param {any} $q
      * @param backendSrv
      * @param templateSrv
-     * @memberof GenericDatasource
+     * @memberof DeviceHiveDatasource
      */
     constructor(instanceSettings, $q, backendSrv, templateSrv) {
         const me = this;
@@ -37,7 +37,7 @@ class GenericDatasource {
      *
      * @param {Object} options
      * @returns
-     * @memberof GenericDatasource
+     * @memberof DeviceHiveDatasource
      */
     query(options) {
         const me = this;
@@ -45,7 +45,7 @@ class GenericDatasource {
         return me.deviceHive.authenticate()
             .then(() => Promise.all(options.targets
                 .filter(target => target.hide !== true )
-                .map(target => me.deviceHive.send(me._generateRequestObject(target, options)))
+                .map(target => me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints)))
             ))
             .then(results => {
                 return {
@@ -72,26 +72,24 @@ class GenericDatasource {
     /**
      *
      * @param options
-     * @returns {Promise.<TResult>}
+     * @returns {Promise}
      */
     annotationQuery(options) {
         const me = this;
 
         return me.deviceHive.authenticate()
-            .then(() => me.deviceHive.send(me._generateRequestObject({
-                type: options.annotation.type,
-                name: options.annotation.entityName,
-                dataPath: options.annotation.dataPath
-            }, options)))
+            .then(() => me.deviceHive.send(me._generateRequestObject(
+                options.annotation.config, options, options.annotation.limit)))
             .then(result => {
-                const type = options.annotation.type;
-                const dataPath = me._processVariables(options.annotation.dataPath);
+                const type = options.annotation.config.type;
+                const dataPath = me._processVariables(options.annotation.config.dataPath);
 
-                return result[`${type}s`].map((result, index) => {
-                    const res = me._extractValueByPath(result, dataPath);
-                    res.annotation = options.annotation;
+                return result[`${type}s`].map((item) => {
+                    const annotationObj = me._extractValueByPath(item, dataPath);
+                    annotationObj.annotation = options.annotation;
+                    annotationObj.time = annotationObj.time || +moment.utc(item.timestamp).format(`x`);
 
-                    return res;
+                    return annotationObj;
                 });
             });
     }
@@ -100,18 +98,14 @@ class GenericDatasource {
      * Function used by Grafana to test datasource
      *
      * @returns
-     * @memberof GenericDatasource
+     * @memberof DeviceHiveDatasource
      */
     testDatasource() {
         const me = this;
 
         return me.deviceHive.authenticate()
-            .then(() => {
-                return { status: `success`, message: `Data source is working`, title: `Success` };
-            })
-            .catch((error) => {
-                return { status: `error`, message: error, title: `Error` };
-            });
+            .then(() => Promise.resolve({ status: `success`, message: `Data source is working`, title: `Success` }))
+            .catch((error) => Promise.resolve({ status: `error`, message: error, title: `Error` }));
     }
 
     /**
@@ -147,10 +141,11 @@ class GenericDatasource {
      *
      * @param target
      * @param allOptions
-     * @returns {{action: string, deviceId: *, start: number, end: number, sortField: string, sortOrder: string, skip: number}}
+     * @param limit
+     * @returns {Object}
      * @private
      */
-    _generateRequestObject(target, allOptions) {
+    _generateRequestObject(target, allOptions, limit) {
         const me = this;
         const resultObj = {
             action: `${target.type}/list`,
@@ -159,8 +154,7 @@ class GenericDatasource {
             end: allOptions.range.to.toDate().getTime(),
             sortField: `timestamp`,
             sortOrder: `ASC`,
-            take: 10000,
-            skip: 0
+            take: limit || 100
         };
 
         resultObj[target.type] = me._processVariables(target.name);
@@ -170,4 +164,4 @@ class GenericDatasource {
 }
 
 
-export default GenericDatasource
+export default DeviceHiveDatasource

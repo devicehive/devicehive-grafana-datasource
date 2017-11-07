@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./GenericDatasource', './GenericDatasourceQueryCtrl', './GenericAnnotationsQueryCtrl'], function (_export, _context) {
+System.register(['./DeviceHiveDatasource', './DeviceHiveDatasourceQueryCtrl', './DeviceHiveAnnotationsQueryCtrl'], function (_export, _context) {
   "use strict";
 
-  var GenericDatasource, GenericDatasourceQueryCtrl, GenericAnnotationsQueryCtrl, GenericConfigCtrl, GenericQueryOptionsCtrl;
+  var DeviceHiveDatasource, DeviceHiveDatasourceQueryCtrl, DeviceHiveAnnotationsQueryCtrl, DeviceHiveConfigCtrl, DeviceHiveQueryOptionsCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -12,35 +12,35 @@ System.register(['./GenericDatasource', './GenericDatasourceQueryCtrl', './Gener
   }
 
   return {
-    setters: [function (_GenericDatasource) {
-      GenericDatasource = _GenericDatasource.default;
-    }, function (_GenericDatasourceQueryCtrl) {
-      GenericDatasourceQueryCtrl = _GenericDatasourceQueryCtrl.default;
-    }, function (_GenericAnnotationsQueryCtrl) {
-      GenericAnnotationsQueryCtrl = _GenericAnnotationsQueryCtrl.default;
+    setters: [function (_DeviceHiveDatasource) {
+      DeviceHiveDatasource = _DeviceHiveDatasource.default;
+    }, function (_DeviceHiveDatasourceQueryCtrl) {
+      DeviceHiveDatasourceQueryCtrl = _DeviceHiveDatasourceQueryCtrl.default;
+    }, function (_DeviceHiveAnnotationsQueryCtrl) {
+      DeviceHiveAnnotationsQueryCtrl = _DeviceHiveAnnotationsQueryCtrl.default;
     }],
     execute: function () {
-      _export('ConfigCtrl', GenericConfigCtrl = function GenericConfigCtrl() {
-        _classCallCheck(this, GenericConfigCtrl);
+      _export('ConfigCtrl', DeviceHiveConfigCtrl = function DeviceHiveConfigCtrl() {
+        _classCallCheck(this, DeviceHiveConfigCtrl);
       });
 
-      GenericConfigCtrl.templateUrl = 'partials/config.html';
+      DeviceHiveConfigCtrl.templateUrl = 'partials/config.html';
 
-      _export('QueryOptionsCtrl', GenericQueryOptionsCtrl = function GenericQueryOptionsCtrl() {
-        _classCallCheck(this, GenericQueryOptionsCtrl);
+      _export('QueryOptionsCtrl', DeviceHiveQueryOptionsCtrl = function DeviceHiveQueryOptionsCtrl() {
+        _classCallCheck(this, DeviceHiveQueryOptionsCtrl);
       });
 
-      GenericQueryOptionsCtrl.templateUrl = 'partials/query.options.html';
+      DeviceHiveQueryOptionsCtrl.templateUrl = 'partials/query.options.html';
 
-      _export('Datasource', GenericDatasource);
+      _export('Datasource', DeviceHiveDatasource);
 
-      _export('QueryCtrl', GenericDatasourceQueryCtrl);
+      _export('QueryCtrl', DeviceHiveDatasourceQueryCtrl);
 
-      _export('ConfigCtrl', GenericConfigCtrl);
+      _export('ConfigCtrl', DeviceHiveConfigCtrl);
 
-      _export('QueryOptionsCtrl', GenericQueryOptionsCtrl);
+      _export('QueryOptionsCtrl', DeviceHiveQueryOptionsCtrl);
 
-      _export('AnnotationsQueryCtrl', GenericAnnotationsQueryCtrl);
+      _export('AnnotationsQueryCtrl', DeviceHiveAnnotationsQueryCtrl);
     }
   };
 });

@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -16,48 +16,52 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var GenericDatasourceQueryCtrl = function (_QueryCtrl) {
-  _inherits(GenericDatasourceQueryCtrl, _QueryCtrl);
+var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
+    _inherits(DeviceHiveDatasourceQueryCtrl, _QueryCtrl);
 
-  /**
-   * Creates an instance of GenericDatasourceQueryCtrl.
-   * @param {any} $scope 
-   * @param {any} $injector 
-   * @param {any} uiSegmentSrv 
-   * @memberof GenericDatasourceQueryCtrl
-   */
-  function GenericDatasourceQueryCtrl($scope, $injector, uiSegmentSrv) {
-    _classCallCheck(this, GenericDatasourceQueryCtrl);
+    /**
+     * Creates an instance of DeviceHiveDatasourceQueryCtrl.
+     * @param {any} $scope
+     * @param {any} $injector
+     * @param {any} uiSegmentSrv
+     * @memberof DeviceHiveDatasourceQueryCtrl
+     */
+    function DeviceHiveDatasourceQueryCtrl($scope, $injector, uiSegmentSrv) {
+        _classCallCheck(this, DeviceHiveDatasourceQueryCtrl);
 
-    var _this = _possibleConstructorReturn(this, (GenericDatasourceQueryCtrl.__proto__ || Object.getPrototypeOf(GenericDatasourceQueryCtrl)).call(this, $scope, $injector));
+        var _this = _possibleConstructorReturn(this, (DeviceHiveDatasourceQueryCtrl.__proto__ || Object.getPrototypeOf(DeviceHiveDatasourceQueryCtrl)).call(this, $scope, $injector));
 
-    _this.target.target = _this.target.target || 'select metric';
-    _this.target.type = _this.target.type || 'command';
-    _this.target.name = _this.target.name || '';
-    _this.target.dataPath = _this.target.dataPath || '';
-    _this.target.scale = _this.target.scale || 1;
-    _this.target.showHelp = false;
-    return _this;
-  }
+        var me = _this;
 
-  /**
-   * Refresh data every time query params change.
-   * 
-   * @memberof GenericDatasourceQueryCtrl
-   */
-
-
-  _createClass(GenericDatasourceQueryCtrl, [{
-    key: 'onChangeInternal',
-    value: function onChangeInternal() {
-      this.panelCtrl.refresh();
+        me.target.target = me.target.target || 'select metric';
+        me.target.type = me.target.type || 'command';
+        me.target.name = me.target.name || '';
+        me.target.dataPath = me.target.dataPath || '';
+        me.target.scale = me.target.scale || 1;
+        me.showHelp = false;
+        return _this;
     }
-  }]);
 
-  return GenericDatasourceQueryCtrl;
+    /**
+     * Refresh data every time query params change.
+     *
+     * @memberof DeviceHiveDatasourceQueryCtrl
+     */
+
+
+    _createClass(DeviceHiveDatasourceQueryCtrl, [{
+        key: 'onChangeInternal',
+        value: function onChangeInternal() {
+            var me = this;
+
+            me.panelCtrl.refresh();
+        }
+    }]);
+
+    return DeviceHiveDatasourceQueryCtrl;
 }(_sdk.QueryCtrl);
 
-GenericDatasourceQueryCtrl.templateUrl = 'partials/query.editor.html';
+DeviceHiveDatasourceQueryCtrl.templateUrl = 'partials/query.editor.html';
 
-exports.default = GenericDatasourceQueryCtrl;
-//# sourceMappingURL=GenericDatasourceQueryCtrl.js.map
+exports.default = DeviceHiveDatasourceQueryCtrl;
+//# sourceMappingURL=DeviceHiveDatasourceQueryCtrl.js.map

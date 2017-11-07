@@ -6,7 +6,8 @@
   "partials": {
   },
 
-  "metrics": true,
+  "alerting": false,
+  "metrics": false,
   "annotations": true,
 
   "info": {

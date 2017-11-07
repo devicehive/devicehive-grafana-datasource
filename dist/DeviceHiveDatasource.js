@@ -3,7 +3,7 @@
 System.register(['moment', './DeviceHive'], function (_export, _context) {
     "use strict";
 
-    var moment, DeviceHive, _createClass, GenericDatasource;
+    var moment, DeviceHive, _createClass, DeviceHiveDatasource;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -36,18 +36,18 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                 };
             }();
 
-            GenericDatasource = function () {
+            DeviceHiveDatasource = function () {
 
                 /**
-                 * Creates an instance of GenericDatasource.
+                 * Creates an instance of DeviceHiveDatasource.
                  * @param {Object} instanceSettings
                  * @param {any} $q
                  * @param backendSrv
                  * @param templateSrv
-                 * @memberof GenericDatasource
+                 * @memberof DeviceHiveDatasource
                  */
-                function GenericDatasource(instanceSettings, $q, backendSrv, templateSrv) {
-                    _classCallCheck(this, GenericDatasource);
+                function DeviceHiveDatasource(instanceSettings, $q, backendSrv, templateSrv) {
+                    _classCallCheck(this, DeviceHiveDatasource);
 
                     var me = this;
 
@@ -70,11 +70,11 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                  *
                  * @param {Object} options
                  * @returns
-                 * @memberof GenericDatasource
+                 * @memberof DeviceHiveDatasource
                  */
 
 
-                _createClass(GenericDatasource, [{
+                _createClass(DeviceHiveDatasource, [{
                     key: 'query',
                     value: function query(options) {
                         var me = this;
@@ -83,7 +83,7 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                             return Promise.all(options.targets.filter(function (target) {
                                 return target.hide !== true;
                             }).map(function (target) {
-                                return me.deviceHive.send(me._generateRequestObject(target, options));
+                                return me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints));
                             }));
                         }).then(function (results) {
                             return {
@@ -109,20 +109,17 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                         var me = this;
 
                         return me.deviceHive.authenticate().then(function () {
-                            return me.deviceHive.send(me._generateRequestObject({
-                                type: options.annotation.type,
-                                name: options.annotation.entityName,
-                                dataPath: options.annotation.dataPath
-                            }, options));
+                            return me.deviceHive.send(me._generateRequestObject(options.annotation.config, options, options.annotation.limit));
                         }).then(function (result) {
-                            var type = options.annotation.type;
-                            var dataPath = me._processVariables(options.annotation.dataPath);
+                            var type = options.annotation.config.type;
+                            var dataPath = me._processVariables(options.annotation.config.dataPath);
 
-                            return result[type + 's'].map(function (result, index) {
-                                var res = me._extractValueByPath(result, dataPath);
-                                res.annotation = options.annotation;
+                            return result[type + 's'].map(function (item) {
+                                var annotationObj = me._extractValueByPath(item, dataPath);
+                                annotationObj.annotation = options.annotation;
+                                annotationObj.time = annotationObj.time || +moment.utc(item.timestamp).format('x');
 
-                                return res;
+                                return annotationObj;
                             });
                         });
                     }
@@ -132,9 +129,9 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                         var me = this;
 
                         return me.deviceHive.authenticate().then(function () {
-                            return { status: 'success', message: 'Data source is working', title: 'Success' };
+                            return Promise.resolve({ status: 'success', message: 'Data source is working', title: 'Success' });
                         }).catch(function (error) {
-                            return { status: 'error', message: error, title: 'Error' };
+                            return Promise.resolve({ status: 'error', message: error, title: 'Error' });
                         });
                     }
                 }, {
@@ -160,7 +157,7 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                     }
                 }, {
                     key: '_generateRequestObject',
-                    value: function _generateRequestObject(target, allOptions) {
+                    value: function _generateRequestObject(target, allOptions, limit) {
                         var me = this;
                         var resultObj = {
                             action: target.type + '/list',
@@ -169,8 +166,7 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                             end: allOptions.range.to.toDate().getTime(),
                             sortField: 'timestamp',
                             sortOrder: 'ASC',
-                            take: 10000,
-                            skip: 0
+                            take: limit || 100
                         };
 
                         resultObj[target.type] = me._processVariables(target.name);
@@ -179,11 +175,11 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                     }
                 }]);
 
-                return GenericDatasource;
+                return DeviceHiveDatasource;
             }();
 
-            _export('default', GenericDatasource);
+            _export('default', DeviceHiveDatasource);
         }
     };
 });
-//# sourceMappingURL=GenericDatasource.js.map
+//# sourceMappingURL=DeviceHiveDatasource.js.map

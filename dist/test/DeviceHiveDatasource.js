@@ -21,18 +21,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  *
  */
-var GenericDatasource = function () {
+var DeviceHiveDatasource = function () {
 
     /**
-     * Creates an instance of GenericDatasource.
+     * Creates an instance of DeviceHiveDatasource.
      * @param {Object} instanceSettings
      * @param {any} $q
      * @param backendSrv
      * @param templateSrv
-     * @memberof GenericDatasource
+     * @memberof DeviceHiveDatasource
      */
-    function GenericDatasource(instanceSettings, $q, backendSrv, templateSrv) {
-        _classCallCheck(this, GenericDatasource);
+    function DeviceHiveDatasource(instanceSettings, $q, backendSrv, templateSrv) {
+        _classCallCheck(this, DeviceHiveDatasource);
 
         var me = this;
 
@@ -55,11 +55,11 @@ var GenericDatasource = function () {
      *
      * @param {Object} options
      * @returns
-     * @memberof GenericDatasource
+     * @memberof DeviceHiveDatasource
      */
 
 
-    _createClass(GenericDatasource, [{
+    _createClass(DeviceHiveDatasource, [{
         key: 'query',
         value: function query(options) {
             var me = this;
@@ -68,7 +68,7 @@ var GenericDatasource = function () {
                 return Promise.all(options.targets.filter(function (target) {
                     return target.hide !== true;
                 }).map(function (target) {
-                    return me.deviceHive.send(me._generateRequestObject(target, options));
+                    return me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints));
                 }));
             }).then(function (results) {
                 return {
@@ -92,7 +92,7 @@ var GenericDatasource = function () {
         /**
          *
          * @param options
-         * @returns {Promise.<TResult>}
+         * @returns {Promise}
          */
 
     }, {
@@ -101,20 +101,17 @@ var GenericDatasource = function () {
             var me = this;
 
             return me.deviceHive.authenticate().then(function () {
-                return me.deviceHive.send(me._generateRequestObject({
-                    type: options.annotation.type,
-                    name: options.annotation.entityName,
-                    dataPath: options.annotation.dataPath
-                }, options));
+                return me.deviceHive.send(me._generateRequestObject(options.annotation.config, options, options.annotation.limit));
             }).then(function (result) {
-                var type = options.annotation.type;
-                var dataPath = me._processVariables(options.annotation.dataPath);
+                var type = options.annotation.config.type;
+                var dataPath = me._processVariables(options.annotation.config.dataPath);
 
-                return result[type + 's'].map(function (result, index) {
-                    var res = me._extractValueByPath(result, dataPath);
-                    res.annotation = options.annotation;
+                return result[type + 's'].map(function (item) {
+                    var annotationObj = me._extractValueByPath(item, dataPath);
+                    annotationObj.annotation = options.annotation;
+                    annotationObj.time = annotationObj.time || +_moment2.default.utc(item.timestamp).format('x');
 
-                    return res;
+                    return annotationObj;
                 });
             });
         }
@@ -123,7 +120,7 @@ var GenericDatasource = function () {
          * Function used by Grafana to test datasource
          *
          * @returns
-         * @memberof GenericDatasource
+         * @memberof DeviceHiveDatasource
          */
 
     }, {
@@ -132,9 +129,9 @@ var GenericDatasource = function () {
             var me = this;
 
             return me.deviceHive.authenticate().then(function () {
-                return { status: 'success', message: 'Data source is working', title: 'Success' };
+                return Promise.resolve({ status: 'success', message: 'Data source is working', title: 'Success' });
             }).catch(function (error) {
-                return { status: 'error', message: error, title: 'Error' };
+                return Promise.resolve({ status: 'error', message: error, title: 'Error' });
             });
         }
 
@@ -181,13 +178,14 @@ var GenericDatasource = function () {
          *
          * @param target
          * @param allOptions
-         * @returns {{action: string, deviceId: *, start: number, end: number, sortField: string, sortOrder: string, skip: number}}
+         * @param limit
+         * @returns {Object}
          * @private
          */
 
     }, {
         key: '_generateRequestObject',
-        value: function _generateRequestObject(target, allOptions) {
+        value: function _generateRequestObject(target, allOptions, limit) {
             var me = this;
             var resultObj = {
                 action: target.type + '/list',
@@ -196,8 +194,7 @@ var GenericDatasource = function () {
                 end: allOptions.range.to.toDate().getTime(),
                 sortField: 'timestamp',
                 sortOrder: 'ASC',
-                take: 10000,
-                skip: 0
+                take: limit || 100
             };
 
             resultObj[target.type] = me._processVariables(target.name);
@@ -206,8 +203,8 @@ var GenericDatasource = function () {
         }
     }]);
 
-    return GenericDatasource;
+    return DeviceHiveDatasource;
 }();
 
-exports.default = GenericDatasource;
-//# sourceMappingURL=GenericDatasource.js.map
+exports.default = DeviceHiveDatasource;
+//# sourceMappingURL=DeviceHiveDatasource.js.map
