@@ -50,7 +50,6 @@ var DeviceHive = function () {
                 return me.isOpen = false;
             });
         } else {
-            console.warn("You need to specify URL, login and password or token");
             throw new Error("You need to specify URL, login and password or token");
         }
     }
@@ -74,11 +73,12 @@ var DeviceHive = function () {
 
                     var listener = function listener(event) {
                         var messageData = JSON.parse(event.data);
+                        var isSuccess = messageData.status === "success";
 
                         if (messageData.action === messageObject.action && messageData.requestId === messageObject.requestId) {
                             me.socket.removeEventListener("message", listener);
-                            me.isAuthenticated = messageData.status === "success";
-                            messageData.status === "success" ? resolve(messageData) : reject(messageData.error);
+                            me.isAuthenticated = isSuccess;
+                            isSuccess ? resolve(messageData) : reject(messageData.error);
                         }
                     };
 

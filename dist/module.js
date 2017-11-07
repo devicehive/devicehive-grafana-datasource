@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./DeviceHiveDatasource', './DeviceHiveDatasourceQueryCtrl', './DeviceHiveAnnotationsQueryCtrl'], function (_export, _context) {
+System.register(['./DeviceHiveDatasource', './DeviceHiveDatasourceQueryCtrl', './DeviceHiveAnnotationsQueryCtrl', './DeviceHiveQueryOptionsCtrl'], function (_export, _context) {
   "use strict";
 
-  var DeviceHiveDatasource, DeviceHiveDatasourceQueryCtrl, DeviceHiveAnnotationsQueryCtrl, DeviceHiveConfigCtrl, DeviceHiveQueryOptionsCtrl;
+  var DeviceHiveDatasource, DeviceHiveDatasourceQueryCtrl, DeviceHiveAnnotationsQueryCtrl, DeviceHiveQueryOptionsCtrl, DeviceHiveConfigCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -18,6 +18,8 @@ System.register(['./DeviceHiveDatasource', './DeviceHiveDatasourceQueryCtrl', '.
       DeviceHiveDatasourceQueryCtrl = _DeviceHiveDatasourceQueryCtrl.default;
     }, function (_DeviceHiveAnnotationsQueryCtrl) {
       DeviceHiveAnnotationsQueryCtrl = _DeviceHiveAnnotationsQueryCtrl.default;
+    }, function (_DeviceHiveQueryOptionsCtrl) {
+      DeviceHiveQueryOptionsCtrl = _DeviceHiveQueryOptionsCtrl.default;
     }],
     execute: function () {
       _export('ConfigCtrl', DeviceHiveConfigCtrl = function DeviceHiveConfigCtrl() {
@@ -25,12 +27,6 @@ System.register(['./DeviceHiveDatasource', './DeviceHiveDatasourceQueryCtrl', '.
       });
 
       DeviceHiveConfigCtrl.templateUrl = 'partials/config.html';
-
-      _export('QueryOptionsCtrl', DeviceHiveQueryOptionsCtrl = function DeviceHiveQueryOptionsCtrl() {
-        _classCallCheck(this, DeviceHiveQueryOptionsCtrl);
-      });
-
-      DeviceHiveQueryOptionsCtrl.templateUrl = 'partials/query.options.html';
 
       _export('Datasource', DeviceHiveDatasource);
 

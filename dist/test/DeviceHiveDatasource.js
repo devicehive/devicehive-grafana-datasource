@@ -74,14 +74,13 @@ var DeviceHiveDatasource = function () {
                 return {
                     data: results.map(function (result, index) {
                         var type = options.targets[index].type;
-                        var scale = me._processVariables(options.targets[index].scale);
                         var dataPath = me._processVariables(options.targets[index].dataPath);
                         var refId = options.targets[index].refId;
 
                         return {
                             target: '' + type + refId,
                             datapoints: result[type + 's'].map(function (target) {
-                                return [me._extractValueByPath(target, dataPath) * (scale === '' ? 1 : scale), +_moment2.default.utc(target.timestamp).format('x')];
+                                return [me._extractValueByPath(target, dataPath), +_moment2.default.utc(target.timestamp).format('x')];
                             })
                         };
                     })
@@ -114,6 +113,23 @@ var DeviceHiveDatasource = function () {
                     return annotationObj;
                 });
             });
+        }
+
+        /**
+         *
+         * @param query
+         * @param optionalOptions
+         * @returns {Promise}
+         */
+
+    }, {
+        key: 'converterQuery',
+        value: function converterQuery() {
+            return [{ name: 'offset', exec: function exec(offsetValue, value) {
+                    return offsetValue + value;
+                } }, { name: 'scale', exec: function exec(offsetValue, value) {
+                    return offsetValue * value;
+                } }];
         }
 
         /**

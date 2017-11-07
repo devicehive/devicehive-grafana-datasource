@@ -1,37 +1,30 @@
 <query-editor-row query-ctrl="ctrl" class="generic-datasource-query-row" has-text-edit-mode="true">
     <div class="gf-form-inline">
-        <div class="gf-form width-18">
-            <div class="gf-form-select-wrapper width-18 gf-form-select-wrapper--has-help-icon">
-                <select class="gf-form-input" ng-model="ctrl.target.type"
-                        ng-options="f as f for f in ['command', 'notification']"
-                        ng-change="ctrl.onChangeInternal()"></select>
-                <info-popover mode="right-absolute">Entity</info-popover>
-            </div>
+
+        <div class="gf-form-select-wrapper width-12 gf-form-select-wrapper--has-help-icon">
+            <select class="gf-form-input" ng-model="ctrl.target.type"
+                    ng-options="f as f for f in ['command', 'notification']"
+                    ng-change="ctrl.onChangeInternal()"></select>
+            <info-popover mode="right-absolute">Entity</info-popover>
         </div>
 
-        <div class="gf-form width-18">
-            <div class="gf-form-input-wrapper width-18 gf-form-input-wrapper--has-help-icon">
-                <input class="gf-form-input" ng-model="ctrl.target.name" spellcheck="false"
-                       ng-blur="ctrl.onChangeInternal()" placeholder="{{ ctrl.target.type }} name"/>
-                <info-popover mode="right-absolute">Name</info-popover>
-            </div>
+        <div class="gf-form width-18 gf-form-input-wrapper--has-help-icon">
+            <input class="gf-form-input" ng-model="ctrl.target.name" spellcheck="false"
+                   ng-blur="ctrl.onChangeInternal()" placeholder="{{ ctrl.target.type }} name"/>
+            <info-popover mode="right-absolute">Name</info-popover>
         </div>
 
-        <div class="gf-form width-18">
-            <div class="gf-form-input-wrapper width-18 gf-form-input-wrapper--has-help-icon">
-                <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false"
-                       ng-blur="ctrl.onChangeInternal()" placeholder="Path: (parameters...)"/>
-                <info-popover mode="right-absolute">Data Path</info-popover>
-            </div>
+        <div class="gf-form width-18 gf-form-input-wrapper--has-help-icon">
+            <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false"
+                   ng-blur="ctrl.onChangeInternal()" placeholder="Path: (parameters...)"/>
+            <info-popover mode="right-absolute">Data Path</info-popover>
         </div>
 
-        <div class="gf-form width-18">
-            <div class="gf-form-input-wrapper width-18 gf-form-input-wrapper--has-help-icon">
-                <input class="gf-form-input" ng-model="ctrl.target.scale" spellcheck="false"
-                       ng-blur="ctrl.onChangeInternal()" placeholder="Scale (0.."/>
-                <info-popover mode="right-absolute">Scale</info-popover>
-            </div>
+        <div ng-repeat="converter in ctrl.target.converters track by $index" class="gf-form">
+            <converter-selector options="ctrl.converterList"></converter-selector>
         </div>
+
+        <add-button ng-click="ctrl.onAddConverter()"></add-button>
 
         <div class="gf-form gf-form--grow">
             <div class="gf-form-label gf-form-label--grow"></div>

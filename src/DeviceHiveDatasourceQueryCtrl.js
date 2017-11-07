@@ -1,4 +1,5 @@
-import './css/query-editor.css!'
+import './css/query-editor.css!';
+import './DeviceHiveDirectives.js';
 import { QueryCtrl } from 'app/plugins/sdk';
 
 
@@ -20,8 +21,16 @@ class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
         me.target.type = me.target.type || `command`;
         me.target.name = me.target.name || ``;
         me.target.dataPath = me.target.dataPath || ``;
-        me.target.scale = me.target.scale || 1;
+        me.target.converters = me.target.converters || [];
+
+        me.converterList = me.datasource.converterQuery();
         me.showHelp = false;
+    }
+
+    onAddConverter() {
+        const me = this;
+
+        me.target.converters.push(1);
     }
 
     /**

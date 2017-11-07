@@ -8,6 +8,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 require('./css/query-editor.css!');
 
+require('./DeviceHiveDirectives.js');
+
 var _sdk = require('app/plugins/sdk');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37,19 +39,28 @@ var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
         me.target.type = me.target.type || 'command';
         me.target.name = me.target.name || '';
         me.target.dataPath = me.target.dataPath || '';
-        me.target.scale = me.target.scale || 1;
+        me.target.converters = me.target.converters || [];
+
+        me.converterList = me.datasource.converterQuery();
         me.showHelp = false;
         return _this;
     }
 
-    /**
-     * Refresh data every time query params change.
-     *
-     * @memberof DeviceHiveDatasourceQueryCtrl
-     */
-
-
     _createClass(DeviceHiveDatasourceQueryCtrl, [{
+        key: 'onAddConverter',
+        value: function onAddConverter() {
+            var me = this;
+
+            me.target.converters.push(1);
+        }
+
+        /**
+         * Refresh data every time query params change.
+         *
+         * @memberof DeviceHiveDatasourceQueryCtrl
+         */
+
+    }, {
         key: 'onChangeInternal',
         value: function onChangeInternal() {
             var me = this;

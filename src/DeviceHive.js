@@ -26,7 +26,6 @@ class DeviceHive {
             me.socket.addEventListener(`open`, () => me.isOpen = true);
             me.socket.addEventListener(`close`, () => me.isOpen = false);
         } else {
-            console.warn(`You need to specify URL, login and password or token`);
             throw new Error(`You need to specify URL, login and password or token`);
         }
     }
@@ -46,12 +45,13 @@ class DeviceHive {
 
                 const listener = (event) => {
                     const messageData = JSON.parse(event.data);
+                    const isSuccess = messageData.status === `success`;
 
                     if (messageData.action === messageObject.action &&
                         messageData.requestId === messageObject.requestId) {
                         me.socket.removeEventListener(`message`, listener);
-                        me.isAuthenticated = messageData.status === `success`;
-                        messageData.status === `success` ? resolve(messageData) : reject(messageData.error);
+                        me.isAuthenticated = isSuccess;
+                        isSuccess ? resolve(messageData) : reject(messageData.error);
                     }
                 };
 

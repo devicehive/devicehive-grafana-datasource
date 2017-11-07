@@ -89,14 +89,13 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                             return {
                                 data: results.map(function (result, index) {
                                     var type = options.targets[index].type;
-                                    var scale = me._processVariables(options.targets[index].scale);
                                     var dataPath = me._processVariables(options.targets[index].dataPath);
                                     var refId = options.targets[index].refId;
 
                                     return {
                                         target: '' + type + refId,
                                         datapoints: result[type + 's'].map(function (target) {
-                                            return [me._extractValueByPath(target, dataPath) * (scale === '' ? 1 : scale), +moment.utc(target.timestamp).format('x')];
+                                            return [me._extractValueByPath(target, dataPath), +moment.utc(target.timestamp).format('x')];
                                         })
                                     };
                                 })
@@ -122,6 +121,15 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                                 return annotationObj;
                             });
                         });
+                    }
+                }, {
+                    key: 'converterQuery',
+                    value: function converterQuery() {
+                        return [{ name: 'offset', exec: function exec(offsetValue, value) {
+                                return offsetValue + value;
+                            } }, { name: 'scale', exec: function exec(offsetValue, value) {
+                                return offsetValue * value;
+                            } }];
                     }
                 }, {
                     key: 'testDatasource',

@@ -17,6 +17,10 @@ var _DeviceHiveAnnotationsQueryCtrl = require('./DeviceHiveAnnotationsQueryCtrl'
 
 var _DeviceHiveAnnotationsQueryCtrl2 = _interopRequireDefault(_DeviceHiveAnnotationsQueryCtrl);
 
+var _DeviceHiveQueryOptionsCtrl = require('./DeviceHiveQueryOptionsCtrl');
+
+var _DeviceHiveQueryOptionsCtrl2 = _interopRequireDefault(_DeviceHiveQueryOptionsCtrl);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27,15 +31,9 @@ var DeviceHiveConfigCtrl = function DeviceHiveConfigCtrl() {
 
 DeviceHiveConfigCtrl.templateUrl = 'partials/config.html';
 
-var DeviceHiveQueryOptionsCtrl = function DeviceHiveQueryOptionsCtrl() {
-  _classCallCheck(this, DeviceHiveQueryOptionsCtrl);
-};
-
-DeviceHiveQueryOptionsCtrl.templateUrl = 'partials/query.options.html';
-
 exports.Datasource = _DeviceHiveDatasource2.default;
 exports.QueryCtrl = _DeviceHiveDatasourceQueryCtrl2.default;
 exports.ConfigCtrl = DeviceHiveConfigCtrl;
-exports.QueryOptionsCtrl = DeviceHiveQueryOptionsCtrl;
+exports.QueryOptionsCtrl = _DeviceHiveQueryOptionsCtrl2.default;
 exports.AnnotationsQueryCtrl = _DeviceHiveAnnotationsQueryCtrl2.default;
 //# sourceMappingURL=module.js.map

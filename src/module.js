@@ -1,13 +1,10 @@
 import DeviceHiveDatasource from './DeviceHiveDatasource';
 import DeviceHiveDatasourceQueryCtrl from './DeviceHiveDatasourceQueryCtrl';
 import DeviceHiveAnnotationsQueryCtrl from './DeviceHiveAnnotationsQueryCtrl';
+import DeviceHiveQueryOptionsCtrl from './DeviceHiveQueryOptionsCtrl';
 
 class DeviceHiveConfigCtrl {}
 DeviceHiveConfigCtrl.templateUrl = `partials/config.html`;
-
-class DeviceHiveQueryOptionsCtrl {}
-DeviceHiveQueryOptionsCtrl.templateUrl = `partials/query.options.html`;
-
 
 export {
   DeviceHiveDatasource as Datasource,

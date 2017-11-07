@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_export, _context) {
+System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/plugins/sdk'], function (_export, _context) {
     "use strict";
 
     var QueryCtrl, _createClass, DeviceHiveDatasourceQueryCtrl;
@@ -36,7 +36,7 @@ System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_expor
     }
 
     return {
-        setters: [function (_cssQueryEditorCss) {}, function (_appPluginsSdk) {
+        setters: [function (_cssQueryEditorCss) {}, function (_DeviceHiveDirectivesJs) {}, function (_appPluginsSdk) {
             QueryCtrl = _appPluginsSdk.QueryCtrl;
         }],
         execute: function () {
@@ -79,19 +79,21 @@ System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_expor
                     me.target.type = me.target.type || 'command';
                     me.target.name = me.target.name || '';
                     me.target.dataPath = me.target.dataPath || '';
-                    me.target.scale = me.target.scale || 1;
+                    me.target.converters = me.target.converters || [];
+
+                    me.converterList = me.datasource.converterQuery();
                     me.showHelp = false;
                     return _this;
                 }
 
-                /**
-                 * Refresh data every time query params change.
-                 *
-                 * @memberof DeviceHiveDatasourceQueryCtrl
-                 */
-
-
                 _createClass(DeviceHiveDatasourceQueryCtrl, [{
+                    key: 'onAddConverter',
+                    value: function onAddConverter() {
+                        var me = this;
+
+                        me.target.converters.push(1);
+                    }
+                }, {
                     key: 'onChangeInternal',
                     value: function onChangeInternal() {
                         var me = this;

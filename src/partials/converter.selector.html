@@ -1,0 +1,9 @@
+<div ng-if="!this.isConverterSelected">
+    <select class="gf-form-input width-12"
+            ng-options="o.name for o in this.options"
+            ng-model="this.selectedConverter"
+            ng-change="this.onConverterSelect()"></select>
+</div>
+<div ng-if="this.isConverterSelected">
+    <label class="gf-form-label width-10">{{ this.selectedConverter }}</label>
+</div>

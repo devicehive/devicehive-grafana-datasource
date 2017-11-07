@@ -51,7 +51,6 @@ class DeviceHiveDatasource {
                 return {
                     data: results.map((result, index) => {
                         const type = options.targets[index].type;
-                        const scale = me._processVariables(options.targets[index].scale);
                         const dataPath = me._processVariables(options.targets[index].dataPath);
                         const refId = options.targets[index].refId;
 
@@ -59,7 +58,7 @@ class DeviceHiveDatasource {
                             target: `${type}${refId}`,
                             datapoints: result[`${type}s`].map(target => {
                                 return [
-                                    me._extractValueByPath(target, dataPath) * (scale === `` ? 1 : scale),
+                                    me._extractValueByPath(target, dataPath),
                                     +moment.utc(target.timestamp).format(`x`)
                                 ]
                             })
@@ -92,6 +91,19 @@ class DeviceHiveDatasource {
                     return annotationObj;
                 });
             });
+    }
+
+    /**
+     *
+     * @param query
+     * @param optionalOptions
+     * @returns {Promise}
+     */
+    converterQuery() {
+        return [
+            { name: `offset`, exec: (offsetValue, value) => offsetValue + value },
+            { name: `scale`, exec: (offsetValue, value) => offsetValue * value }
+        ];
     }
 
     /**
