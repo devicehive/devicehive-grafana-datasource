@@ -58,7 +58,7 @@ System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_expor
         };
       }();
 
-      _export('GenericDatasourceQueryCtrl', GenericDatasourceQueryCtrl = function (_QueryCtrl) {
+      GenericDatasourceQueryCtrl = function (_QueryCtrl) {
         _inherits(GenericDatasourceQueryCtrl, _QueryCtrl);
 
         /**
@@ -97,9 +97,7 @@ System.register(['./css/query-editor.css!', 'app/plugins/sdk'], function (_expor
         }]);
 
         return GenericDatasourceQueryCtrl;
-      }(QueryCtrl));
-
-      _export('GenericDatasourceQueryCtrl', GenericDatasourceQueryCtrl);
+      }(QueryCtrl);
 
       GenericDatasourceQueryCtrl.templateUrl = 'partials/query.editor.html';
 

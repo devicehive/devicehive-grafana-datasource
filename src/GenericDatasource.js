@@ -76,18 +76,23 @@ class GenericDatasource {
      */
     annotationQuery(options) {
         const me = this;
-        console.log(options.annotation);
+
         return me.deviceHive.authenticate()
-            .then(() => me.deviceHive.send(me._generateRequestObject(options.annotation, options)))
+            .then(() => me.deviceHive.send(me._generateRequestObject({
+                type: options.annotation.type,
+                name: options.annotation.entityName,
+                dataPath: options.annotation.dataPath
+            }, options)))
             .then(result => {
                 const type = options.annotation.type;
                 const dataPath = me._processVariables(options.annotation.dataPath);
 
-                return {
-                    data: result[`${type}s`].map((result, index) => {
-                        return me._extractValueByPath(result, dataPath);
-                    })
-                }
+                return result[`${type}s`].map((result, index) => {
+                    const res = me._extractValueByPath(result, dataPath);
+                    res.annotation = options.annotation;
+
+                    return res;
+                });
             });
     }
 
@@ -101,8 +106,12 @@ class GenericDatasource {
         const me = this;
 
         return me.deviceHive.authenticate()
-            .then(() => Promise.resolve({status: `success`, message: `Data source is working`, title: `Success`}))
-            .catch((error) => Promise.resolve({status: `error`, message: error, title: `Error`}));
+            .then(() => {
+                return { status: `success`, message: `Data source is working`, title: `Success` };
+            })
+            .catch((error) => {
+                return { status: `error`, message: error, title: `Error` };
+            });
     }
 
     /**
@@ -150,6 +159,7 @@ class GenericDatasource {
             end: allOptions.range.to.toDate().getTime(),
             sortField: `timestamp`,
             sortOrder: `ASC`,
+            take: 10000,
             skip: 0
         };
 

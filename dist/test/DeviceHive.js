@@ -77,6 +77,7 @@ var DeviceHive = function () {
 
                         if (messageData.action === messageObject.action && messageData.requestId === messageObject.requestId) {
                             me.socket.removeEventListener("message", listener);
+                            me.isAuthenticated = messageData.status === "success";
                             messageData.status === "success" ? resolve(messageData) : reject(messageData.error);
                         }
                     };

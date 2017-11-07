@@ -107,18 +107,23 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                     key: 'annotationQuery',
                     value: function annotationQuery(options) {
                         var me = this;
-                        console.log(options.annotation);
+
                         return me.deviceHive.authenticate().then(function () {
-                            return me.deviceHive.send(me._generateRequestObject(options.annotation, options));
+                            return me.deviceHive.send(me._generateRequestObject({
+                                type: options.annotation.type,
+                                name: options.annotation.entityName,
+                                dataPath: options.annotation.dataPath
+                            }, options));
                         }).then(function (result) {
                             var type = options.annotation.type;
                             var dataPath = me._processVariables(options.annotation.dataPath);
 
-                            return {
-                                data: result[type + 's'].map(function (result, index) {
-                                    return me._extractValueByPath(result, dataPath);
-                                })
-                            };
+                            return result[type + 's'].map(function (result, index) {
+                                var res = me._extractValueByPath(result, dataPath);
+                                res.annotation = options.annotation;
+
+                                return res;
+                            });
                         });
                     }
                 }, {
@@ -127,9 +132,9 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                         var me = this;
 
                         return me.deviceHive.authenticate().then(function () {
-                            return Promise.resolve({ status: 'success', message: 'Data source is working', title: 'Success' });
+                            return { status: 'success', message: 'Data source is working', title: 'Success' };
                         }).catch(function (error) {
-                            return Promise.resolve({ status: 'error', message: error, title: 'Error' });
+                            return { status: 'error', message: error, title: 'Error' };
                         });
                     }
                 }, {
@@ -164,6 +169,7 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                             end: allOptions.range.to.toDate().getTime(),
                             sortField: 'timestamp',
                             sortOrder: 'ASC',
+                            take: 10000,
                             skip: 0
                         };
 
