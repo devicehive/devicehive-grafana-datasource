@@ -1,6 +1,8 @@
 import moment from 'moment';
 import DeviceHive from './DeviceHive';
+import ConverterManager from './ConverterManager.js';
 
+const converterManager = new ConverterManager();
 
 /**
  *
@@ -58,7 +60,7 @@ class DeviceHiveDatasource {
                             target: `${type}${refId}`,
                             datapoints: result[`${type}s`].map(target => {
                                 return [
-                                    me._extractValueByPath(target, dataPath),
+                                    me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters),
                                     +moment.utc(target.timestamp).format(`x`)
                                 ]
                             })
@@ -94,19 +96,6 @@ class DeviceHiveDatasource {
     }
 
     /**
-     *
-     * @param query
-     * @param optionalOptions
-     * @returns {Promise}
-     */
-    converterQuery() {
-        return [
-            { name: `offset`, exec: (offsetValue, value) => offsetValue + value },
-            { name: `scale`, exec: (offsetValue, value) => offsetValue * value }
-        ];
-    }
-
-    /**
      * Function used by Grafana to test datasource
      *
      * @returns
@@ -118,6 +107,17 @@ class DeviceHiveDatasource {
         return me.deviceHive.authenticate()
             .then(() => Promise.resolve({ status: `success`, message: `Data source is working`, title: `Success` }))
             .catch((error) => Promise.resolve({ status: `error`, message: error, title: `Error` }));
+    }
+
+    /**
+     *
+     * @param value
+     * @param converters
+     * @private
+     */
+    _convertValue(value, converters) {
+        return converters.reduce((v, converter) =>
+            converterManager.convert(converter.name, v, converter.argValues), value);
     }
 
     /**

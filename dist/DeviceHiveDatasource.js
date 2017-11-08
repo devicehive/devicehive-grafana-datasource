@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['moment', './DeviceHive'], function (_export, _context) {
+System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_export, _context) {
     "use strict";
 
-    var moment, DeviceHive, _createClass, DeviceHiveDatasource;
+    var moment, DeviceHive, ConverterManager, _createClass, converterManager, DeviceHiveDatasource;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -16,6 +16,8 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
             moment = _moment.default;
         }, function (_DeviceHive) {
             DeviceHive = _DeviceHive.default;
+        }, function (_ConverterManagerJs) {
+            ConverterManager = _ConverterManagerJs.default;
         }],
         execute: function () {
             _createClass = function () {
@@ -35,6 +37,8 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                     return Constructor;
                 };
             }();
+
+            converterManager = new ConverterManager();
 
             DeviceHiveDatasource = function () {
 
@@ -95,7 +99,7 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                                     return {
                                         target: '' + type + refId,
                                         datapoints: result[type + 's'].map(function (target) {
-                                            return [me._extractValueByPath(target, dataPath), +moment.utc(target.timestamp).format('x')];
+                                            return [me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters), +moment.utc(target.timestamp).format('x')];
                                         })
                                     };
                                 })
@@ -123,15 +127,6 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                         });
                     }
                 }, {
-                    key: 'converterQuery',
-                    value: function converterQuery() {
-                        return [{ name: 'offset', exec: function exec(offsetValue, value) {
-                                return offsetValue + value;
-                            } }, { name: 'scale', exec: function exec(offsetValue, value) {
-                                return offsetValue * value;
-                            } }];
-                    }
-                }, {
                     key: 'testDatasource',
                     value: function testDatasource() {
                         var me = this;
@@ -141,6 +136,13 @@ System.register(['moment', './DeviceHive'], function (_export, _context) {
                         }).catch(function (error) {
                             return Promise.resolve({ status: 'error', message: error, title: 'Error' });
                         });
+                    }
+                }, {
+                    key: '_convertValue',
+                    value: function _convertValue(value, converters) {
+                        return converters.reduce(function (v, converter) {
+                            return converterManager.convert(converter.name, v, converter.argValues);
+                        }, value);
                     }
                 }, {
                     key: '_processVariables',

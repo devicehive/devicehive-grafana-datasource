@@ -1,7 +1,9 @@
 import './css/query-editor.css!';
 import './DeviceHiveDirectives.js';
 import { QueryCtrl } from 'app/plugins/sdk';
+import ConverterManager from './ConverterManager.js';
 
+const converterManager = new ConverterManager();
 
 class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
 
@@ -23,14 +25,22 @@ class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
         me.target.dataPath = me.target.dataPath || ``;
         me.target.converters = me.target.converters || [];
 
-        me.converterList = me.datasource.converterQuery();
         me.showHelp = false;
     }
 
-    onAddConverter() {
+    onAddConverter(converterName) {
         const me = this;
 
-        me.target.converters.push(1);
+        me.target.converters.push({
+            name: converterName,
+            argValues: converterManager.getConverterDefaultValuesObject(converterName)
+        });
+    }
+
+    onDeleteConverter(index) {
+        const me = this;
+
+        me.target.converters.splice(index, 1);
     }
 
     /**

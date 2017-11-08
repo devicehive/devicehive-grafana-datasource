@@ -6,39 +6,47 @@ var _angular = require('angular');
 
 var _angular2 = _interopRequireDefault(_angular);
 
+var _ConverterManager = require('./ConverterManager.js');
+
+var _ConverterManager2 = _interopRequireDefault(_ConverterManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var converterManager = new _ConverterManager2.default();
 var templatesRoot = 'public/plugins/devicehive-devicehive-datasource/partials';
-
-var AddButton = function AddButton() {
-    _classCallCheck(this, AddButton);
-
-    this.restrict = 'E';
-    this.templateUrl = templatesRoot + '/add.button.html';
-};
 
 var ConverterSelector = function () {
     function ConverterSelector() {
         _classCallCheck(this, ConverterSelector);
 
-        this.restrict = 'E';
-        this.templateUrl = templatesRoot + '/converter.selector.html';
-        this.scope = {
-            options: '='
+        var me = this;
+
+        me.restrict = 'E';
+        me.templateUrl = templatesRoot + '/converter.selector.html';
+        me.scope = {
+            onlySelector: '@',
+            onSelect: '&',
+            onBlur: '&'
         };
     }
 
     _createClass(ConverterSelector, [{
-        key: 'controller',
-        value: function controller($scope) {
-            $scope.isConverterSelected = false;
-            $scope.options = $scope.options || [];
-            $scope.selectedConverter = $scope.selectedConverter || [];
+        key: 'link',
+        value: function link(scope, element, attrs) {
+            scope.expanded = false;
+            scope.selectedConverter = null;
+            scope.converters = converterManager.getConvertersNameList();
 
-            $scope.onConverterSelect = function () {
-                $scope.isConverterSelected = true;
+            scope.onChange = function () {
+                scope.onSelect({ converterName: scope.selectedConverter });
+                scope.toggleSelector();
+            };
+
+            scope.toggleSelector = function () {
+                scope.expanded = !scope.expanded;
+                scope.selectedConverter = null;
             };
         }
     }]);
@@ -46,9 +54,49 @@ var ConverterSelector = function () {
     return ConverterSelector;
 }();
 
-_angular2.default.module('grafana.directives').directive('addButton', function () {
-    return new AddButton();
-}).directive('converterSelector', function () {
+var Converter = function () {
+    function Converter() {
+        _classCallCheck(this, Converter);
+
+        var me = this;
+
+        me.restrict = 'E';
+        me.templateUrl = templatesRoot + '/converter.html';
+        me.scope = {
+            converterName: '=',
+            argValues: '=',
+            onDelete: '&'
+        };
+    }
+
+    _createClass(Converter, [{
+        key: 'link',
+        value: function link(scope, element, attrs) {
+            scope.isConverterSelected = true;
+            scope.showEditPanel = false;
+            scope.config = converterManager.getConverterObject(scope.converterName);
+
+            scope.toggleEditPanel = function () {
+                scope.showEditPanel = !scope.showEditPanel;
+            };
+
+            scope.changeConverter = function () {
+                scope.isConverterSelected = false;
+            };
+
+            scope.onConverterSelect = function (converterName) {
+                scope.config = converterManager.getConverterObject(converterName);
+                scope.isConverterSelected = true;
+            };
+        }
+    }]);
+
+    return Converter;
+}();
+
+_angular2.default.module('grafana.directives').directive('converterSelector', function () {
     return new ConverterSelector();
+}).directive('converter', function () {
+    return new Converter();
 });
 //# sourceMappingURL=DeviceHiveDirectives.js.map

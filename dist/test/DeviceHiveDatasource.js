@@ -14,13 +14,20 @@ var _DeviceHive = require('./DeviceHive');
 
 var _DeviceHive2 = _interopRequireDefault(_DeviceHive);
 
+var _ConverterManager = require('./ConverterManager.js');
+
+var _ConverterManager2 = _interopRequireDefault(_ConverterManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var converterManager = new _ConverterManager2.default();
+
 /**
  *
  */
+
 var DeviceHiveDatasource = function () {
 
     /**
@@ -80,7 +87,7 @@ var DeviceHiveDatasource = function () {
                         return {
                             target: '' + type + refId,
                             datapoints: result[type + 's'].map(function (target) {
-                                return [me._extractValueByPath(target, dataPath), +_moment2.default.utc(target.timestamp).format('x')];
+                                return [me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters), +_moment2.default.utc(target.timestamp).format('x')];
                             })
                         };
                     })
@@ -116,23 +123,6 @@ var DeviceHiveDatasource = function () {
         }
 
         /**
-         *
-         * @param query
-         * @param optionalOptions
-         * @returns {Promise}
-         */
-
-    }, {
-        key: 'converterQuery',
-        value: function converterQuery() {
-            return [{ name: 'offset', exec: function exec(offsetValue, value) {
-                    return offsetValue + value;
-                } }, { name: 'scale', exec: function exec(offsetValue, value) {
-                    return offsetValue * value;
-                } }];
-        }
-
-        /**
          * Function used by Grafana to test datasource
          *
          * @returns
@@ -149,6 +139,21 @@ var DeviceHiveDatasource = function () {
             }).catch(function (error) {
                 return Promise.resolve({ status: 'error', message: error, title: 'Error' });
             });
+        }
+
+        /**
+         *
+         * @param value
+         * @param converters
+         * @private
+         */
+
+    }, {
+        key: '_convertValue',
+        value: function _convertValue(value, converters) {
+            return converters.reduce(function (v, converter) {
+                return converterManager.convert(converter.name, v, converter.argValues);
+            }, value);
         }
 
         /**

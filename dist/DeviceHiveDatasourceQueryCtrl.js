@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/plugins/sdk'], function (_export, _context) {
+System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/plugins/sdk', './ConverterManager.js'], function (_export, _context) {
     "use strict";
 
-    var QueryCtrl, _createClass, DeviceHiveDatasourceQueryCtrl;
+    var QueryCtrl, ConverterManager, _createClass, converterManager, DeviceHiveDatasourceQueryCtrl;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -38,6 +38,8 @@ System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/pl
     return {
         setters: [function (_cssQueryEditorCss) {}, function (_DeviceHiveDirectivesJs) {}, function (_appPluginsSdk) {
             QueryCtrl = _appPluginsSdk.QueryCtrl;
+        }, function (_ConverterManagerJs) {
+            ConverterManager = _ConverterManagerJs.default;
         }],
         execute: function () {
             _createClass = function () {
@@ -57,6 +59,8 @@ System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/pl
                     return Constructor;
                 };
             }();
+
+            converterManager = new ConverterManager();
 
             DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
                 _inherits(DeviceHiveDatasourceQueryCtrl, _QueryCtrl);
@@ -81,17 +85,26 @@ System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/pl
                     me.target.dataPath = me.target.dataPath || '';
                     me.target.converters = me.target.converters || [];
 
-                    me.converterList = me.datasource.converterQuery();
                     me.showHelp = false;
                     return _this;
                 }
 
                 _createClass(DeviceHiveDatasourceQueryCtrl, [{
                     key: 'onAddConverter',
-                    value: function onAddConverter() {
+                    value: function onAddConverter(converterName) {
                         var me = this;
 
-                        me.target.converters.push(1);
+                        me.target.converters.push({
+                            name: converterName,
+                            argValues: converterManager.getConverterDefaultValuesObject(converterName)
+                        });
+                    }
+                }, {
+                    key: 'onDeleteConverter',
+                    value: function onDeleteConverter(index) {
+                        var me = this;
+
+                        me.target.converters.splice(index, 1);
                     }
                 }, {
                     key: 'onChangeInternal',

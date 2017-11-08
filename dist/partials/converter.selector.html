@@ -1,9 +1,16 @@
-<div ng-if="!this.isConverterSelected">
-    <select class="gf-form-input width-12"
-            ng-options="o.name for o in this.options"
-            ng-model="this.selectedConverter"
-            ng-change="this.onConverterSelect()"></select>
-</div>
-<div ng-if="this.isConverterSelected">
-    <label class="gf-form-label width-10">{{ this.selectedConverter }}</label>
+<div class="gf-form-inline">
+    <select name="converterSelector" class="gf-form-input width-12"
+            ng-if="onlySelector || expanded"
+            ng-blur="onBlur()"
+            ng-model="$parent.selectedConverter"
+            ng-options="converter for converter in converters"
+            ng-change="onChange()">
+        <option value="" disabled selected>select converter</option>
+    </select>
+    <a class="gf-form-label"
+       ng-hide="onlySelector"
+       ng-click="toggleSelector()">
+        <i ng-if="!expanded" class="fa fa-plus"></i>
+        <i ng-if="expanded" class="fa fa-chevron-left"></i>
+    </a>
 </div>

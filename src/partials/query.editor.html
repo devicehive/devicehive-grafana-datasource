@@ -21,10 +21,13 @@
         </div>
 
         <div ng-repeat="converter in ctrl.target.converters track by $index" class="gf-form">
-            <converter-selector options="ctrl.converterList"></converter-selector>
+            <converter
+                    converter-name="converter.name"
+                    arg-values="converter.argValues"
+                    on-delete="ctrl.onDeleteConverter($index)">
+            </converter>
         </div>
-
-        <add-button ng-click="ctrl.onAddConverter()"></add-button>
+        <converter-selector on-select="ctrl.onAddConverter(converterName)"></converter-selector>
 
         <div class="gf-form gf-form--grow">
             <div class="gf-form-label gf-form-label--grow"></div>

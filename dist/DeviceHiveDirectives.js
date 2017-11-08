@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['angular'], function (_export, _context) {
+System.register(['angular', './ConverterManager.js'], function (_export, _context) {
     "use strict";
 
-    var angular, _createClass, templatesRoot, AddButton, ConverterSelector;
+    var angular, ConverterManager, _createClass, converterManager, templatesRoot, ConverterSelector, Converter;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -14,6 +14,8 @@ System.register(['angular'], function (_export, _context) {
     return {
         setters: [function (_angular) {
             angular = _angular.default;
+        }, function (_ConverterManagerJs) {
+            ConverterManager = _ConverterManagerJs.default;
         }],
         execute: function () {
             _createClass = function () {
@@ -34,35 +36,39 @@ System.register(['angular'], function (_export, _context) {
                 };
             }();
 
+            converterManager = new ConverterManager();
             templatesRoot = 'public/plugins/devicehive-devicehive-datasource/partials';
-
-            AddButton = function AddButton() {
-                _classCallCheck(this, AddButton);
-
-                this.restrict = 'E';
-                this.templateUrl = templatesRoot + '/add.button.html';
-            };
 
             ConverterSelector = function () {
                 function ConverterSelector() {
                     _classCallCheck(this, ConverterSelector);
 
-                    this.restrict = 'E';
-                    this.templateUrl = templatesRoot + '/converter.selector.html';
-                    this.scope = {
-                        options: '='
+                    var me = this;
+
+                    me.restrict = 'E';
+                    me.templateUrl = templatesRoot + '/converter.selector.html';
+                    me.scope = {
+                        onlySelector: '@',
+                        onSelect: '&',
+                        onBlur: '&'
                     };
                 }
 
                 _createClass(ConverterSelector, [{
-                    key: 'controller',
-                    value: function controller($scope) {
-                        $scope.isConverterSelected = false;
-                        $scope.options = $scope.options || [];
-                        $scope.selectedConverter = $scope.selectedConverter || [];
+                    key: 'link',
+                    value: function link(scope, element, attrs) {
+                        scope.expanded = false;
+                        scope.selectedConverter = null;
+                        scope.converters = converterManager.getConvertersNameList();
 
-                        $scope.onConverterSelect = function () {
-                            $scope.isConverterSelected = true;
+                        scope.onChange = function () {
+                            scope.onSelect({ converterName: scope.selectedConverter });
+                            scope.toggleSelector();
+                        };
+
+                        scope.toggleSelector = function () {
+                            scope.expanded = !scope.expanded;
+                            scope.selectedConverter = null;
                         };
                     }
                 }]);
@@ -70,10 +76,50 @@ System.register(['angular'], function (_export, _context) {
                 return ConverterSelector;
             }();
 
-            angular.module('grafana.directives').directive('addButton', function () {
-                return new AddButton();
-            }).directive('converterSelector', function () {
+            Converter = function () {
+                function Converter() {
+                    _classCallCheck(this, Converter);
+
+                    var me = this;
+
+                    me.restrict = 'E';
+                    me.templateUrl = templatesRoot + '/converter.html';
+                    me.scope = {
+                        converterName: '=',
+                        argValues: '=',
+                        onDelete: '&'
+                    };
+                }
+
+                _createClass(Converter, [{
+                    key: 'link',
+                    value: function link(scope, element, attrs) {
+                        scope.isConverterSelected = true;
+                        scope.showEditPanel = false;
+                        scope.config = converterManager.getConverterObject(scope.converterName);
+
+                        scope.toggleEditPanel = function () {
+                            scope.showEditPanel = !scope.showEditPanel;
+                        };
+
+                        scope.changeConverter = function () {
+                            scope.isConverterSelected = false;
+                        };
+
+                        scope.onConverterSelect = function (converterName) {
+                            scope.config = converterManager.getConverterObject(converterName);
+                            scope.isConverterSelected = true;
+                        };
+                    }
+                }]);
+
+                return Converter;
+            }();
+
+            angular.module('grafana.directives').directive('converterSelector', function () {
                 return new ConverterSelector();
+            }).directive('converter', function () {
+                return new Converter();
             });
         }
     };

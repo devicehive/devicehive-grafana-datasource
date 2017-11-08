@@ -1,0 +1,30 @@
+<div ng-if="!isConverterSelected">
+    <converter-selector
+            only-selector="true"
+            on-blur="isConverterSelected = true"
+            on-select="onConverterSelect(converterName)">
+    </converter-selector>
+</div>
+<div ng-if="isConverterSelected">
+    <div class="gf-form-inline">
+        <label class="gf-form-label">
+            {{ converterName }}
+            <i class="fa fa-caret-left" style="margin-left: 3px;" ng-show="showEditPanel" ng-click="showEditPanel = !showEditPanel"></i>
+            <i class="fa fa-caret-right" style="margin-left: 3px;" ng-hide="showEditPanel" ng-click="showEditPanel = !showEditPanel"></i>
+            <i class="fa fa-refresh" style="margin-left: 3px;" ng-show="showEditPanel" ng-click="changeConverter()"></i>
+            <i class="fa fa-close" style="margin-left: 3px;" ng-show="showEditPanel" ng-click="onDelete()"></i>
+        </label>
+        <div ng-repeat="argument in config.arguments track by $index">
+            <input ng-if="argument.type === 'number'" class="gf-form-input width-4"
+                   ng-model="$parent.argValues[$index]"/>
+            <select ng-if="argument.type === 'option'" class="gf-form-input"
+                    ng-model="$parent.argValues[$index]"
+                    ng-options="option for option in argument.options">
+            </select>
+            <select ng-if="argument.type === 'typedOption'" class="gf-form-input"
+                    ng-model="$parent.argValues[$index]"
+                    ng-options="option for option in argument.options[$parent.argValues[0]]">
+            </select>
+        </div>
+    </div>
+</div>
