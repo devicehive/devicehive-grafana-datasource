@@ -129,7 +129,10 @@ var ConverterManager = function () {
         key: '_getConvertOptions',
         value: function _getConvertOptions() {
             return {
-                temperature: ['C', 'F', 'K']
+                temperature: ['C', 'F', 'K'],
+                length: ['m', 'mi', 'yd', 'ft', 'in'],
+                weight: ['kg', 'lb', 'oz'],
+                volume: ['l', 'gal', 'pt']
             };
         }
     }, {
@@ -137,9 +140,21 @@ var ConverterManager = function () {
         value: function _execConvert(type, from, to, value) {
             var result = value;
 
+            from = from.toUpperCase();
+            to = to.toUpperCase();
+
             switch (type) {
                 case 'temperature':
                     result = ConverterManager._convertTemperature(from, to, value);
+                    break;
+                case 'length':
+                    result = ConverterManager._convertLength(from, to, value);
+                    break;
+                case 'weight':
+                    result = ConverterManager._convertWeight(from, to, value);
+                    break;
+                case 'volume':
+                    result = ConverterManager._convertVolume(from, to, value);
                     break;
             }
 
@@ -148,6 +163,135 @@ var ConverterManager = function () {
     }, {
         key: '_convertTemperature',
         value: function _convertTemperature(from, to, value) {
+            var result = value;
+
+            switch (from + to) {
+                case 'CF':
+                    result = value * 9 / 5 + 32;
+                    break;
+                case 'CK':
+                    result = value + 273.15;
+                    break;
+                case 'FC':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'FK':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'KC':
+                    result = value - 273.15;
+                    break;
+                case 'KF':
+                    result = value * 9 / 5 - 459.67;
+                    break;
+            }
+
+            return result;
+        }
+
+        //ength: [ 'm', 'mi', 'yd', 'ft', 'in' ],
+
+    }, {
+        key: '_convertLength',
+        value: function _convertLength(from, to, value) {
+            var result = value;
+
+            switch (from + to) {
+                case 'MMI':
+                    result = value * 9 / 5 + 32;
+                    break;
+                case 'MYD':
+                    result = value + 273.15;
+                    break;
+                case 'MFT':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'MIN':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'MIM':
+                    result = value + 273.15;
+                    break;
+                case 'MIYD':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'MIFT':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'MIIN':
+                    result = value * 9 / 5 + 32;
+                    break;
+                case 'YDM':
+                    result = value + 273.15;
+                    break;
+                case 'YDMI':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'YDFT':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'YDIN':
+                    result = value * 9 / 5 + 32;
+                    break;
+                case 'FTM':
+                    result = value + 273.15;
+                    break;
+                case 'FTMI':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'FTYD':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'FTIN':
+                    result = value * 9 / 5 + 32;
+                    break;
+                case 'INM':
+                    result = value + 273.15;
+                    break;
+                case 'INMI':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'IN':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'IN':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+            }
+
+            return result;
+        }
+    }, {
+        key: '_convertWeight',
+        value: function _convertWeight(from, to, value) {
+            var result = value;
+
+            switch (from + to) {
+                case 'CF':
+                    result = value * 9 / 5 + 32;
+                    break;
+                case 'CK':
+                    result = value + 273.15;
+                    break;
+                case 'FC':
+                    result = (value - 32) * 5 / 9;
+                    break;
+                case 'FK':
+                    result = (value + 459.67) * 5 / 9;
+                    break;
+                case 'KC':
+                    result = value - 273.15;
+                    break;
+                case 'KF':
+                    result = value * 9 / 5 - 459.67;
+                    break;
+            }
+
+            return result;
+        }
+    }, {
+        key: '_convertVolume',
+        value: function _convertVolume(from, to, value) {
             var result = value;
 
             switch (from + to) {

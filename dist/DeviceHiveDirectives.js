@@ -107,7 +107,12 @@ System.register(['angular', './ConverterManager.js'], function (_export, _contex
                         };
 
                         scope.onConverterSelect = function (converterName) {
-                            scope.config = converterManager.getConverterObject(converterName);
+                            if (scope.converterName !== converterName) {
+                                scope.converterName = converterName;
+                                scope.config = converterManager.getConverterObject(converterName);
+                                scope.argValues = converterManager.getConverterDefaultValuesObject(converterName);
+                            }
+
                             scope.isConverterSelected = true;
                         };
                     }
