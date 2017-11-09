@@ -89,6 +89,12 @@ System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/pl
                     return _this;
                 }
 
+                /**
+                 * Add converter handler
+                 * @param converterName
+                 */
+
+
                 _createClass(DeviceHiveDatasourceQueryCtrl, [{
                     key: 'onAddConverter',
                     value: function onAddConverter(converterName) {

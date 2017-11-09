@@ -1,8 +1,9 @@
 import lodash from "lodash";
 import Events from "./utils/Events";
 
+
 /**
- *
+ * DeviceHive api class
  */
 class DeviceHive extends Events {
 
@@ -63,7 +64,6 @@ class DeviceHive extends Events {
 
     /**
      * Internal `authenticate` message sender
-     *
      * @param {String} accessToken
      * @memberof DeviceHive
      */
@@ -83,7 +83,7 @@ class DeviceHive extends Events {
     }
 
     /**
-     *
+     * Waits for WS session to be opened
      * @return {Promise}
      * @private
      */

@@ -35,6 +35,10 @@ System.register(['lodash'], function (_export, _context) {
             }();
 
             ConverterManager = function () {
+
+                /**
+                 * Create new ConverterManager
+                 */
                 function ConverterManager() {
                     _classCallCheck(this, ConverterManager);
 
@@ -56,16 +60,22 @@ System.register(['lodash'], function (_export, _context) {
                         }
                     });
 
-                    var convertValueOptions = ConverterManager.getConvertOptions();
+                    var convertValueOptions = ConverterManager.getUnitConvertOptions();
                     var convertTypeOptions = Object.keys(convertValueOptions);
 
                     me.converters.set('Unit converter', {
                         arguments: [{ type: 'option', defaultValue: convertTypeOptions[0], options: convertTypeOptions }, { type: 'typedOption', defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions }, { type: 'typedOption', defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions }],
                         exec: function exec(a1, a2, a3, value) {
-                            return ConverterManager._execConvert(a1, a2, a3, value);
+                            return ConverterManager._execUnitConvert(a1, a2, a3, value);
                         }
                     });
                 }
+
+                /**
+                 * Returns converters Map
+                 * @returns {Map}
+                 */
+
 
                 _createClass(ConverterManager, [{
                     key: 'getConvertersMap',
@@ -128,6 +138,16 @@ System.register(['lodash'], function (_export, _context) {
                         return result;
                     }
                 }], [{
+                    key: 'getUnitConvertOptions',
+                    value: function getUnitConvertOptions() {
+                        return {
+                            temperature: ['c', 'f', 'k'],
+                            length: ['m', 'mi', 'yd', 'ft', 'in'],
+                            weight: ['kg', 'lb', 'oz'],
+                            volume: ['l', 'gal', 'pt']
+                        };
+                    }
+                }, {
                     key: '_castArgument',
                     value: function _castArgument(value, argument) {
                         var result = argument.defaultValue;
@@ -146,18 +166,8 @@ System.register(['lodash'], function (_export, _context) {
                         return result;
                     }
                 }, {
-                    key: 'getConvertOptions',
-                    value: function getConvertOptions() {
-                        return {
-                            temperature: ['c', 'f', 'k'],
-                            length: ['m', 'mi', 'yd', 'ft', 'in'],
-                            weight: ['kg', 'lb', 'oz'],
-                            volume: ['l', 'gal', 'pt']
-                        };
-                    }
-                }, {
-                    key: '_execConvert',
-                    value: function _execConvert(type, from, to, value) {
+                    key: '_execUnitConvert',
+                    value: function _execUnitConvert(type, from, to, value) {
                         var result = value;
 
                         from = from.toUpperCase();

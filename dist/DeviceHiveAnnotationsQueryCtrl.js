@@ -17,7 +17,7 @@ System.register([], function (_export, _context) {
             DeviceHiveAnnotationsQueryCtrl =
 
             /**
-             *
+             * Create new DeviceHiveAnnotationsQueryCtrl
              */
             function DeviceHiveAnnotationsQueryCtrl() {
                 _classCallCheck(this, DeviceHiveAnnotationsQueryCtrl);

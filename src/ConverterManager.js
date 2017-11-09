@@ -1,8 +1,14 @@
 import lodash from "lodash";
 
 
+/**
+ * Value converter manager
+ */
 class ConverterManager {
 
+    /**
+     * Create new ConverterManager
+     */
     constructor() {
         const me = this;
 
@@ -22,7 +28,7 @@ class ConverterManager {
             exec: (a1, value) => a1 * value
         });
 
-        const convertValueOptions = ConverterManager.getConvertOptions();
+        const convertValueOptions = ConverterManager.getUnitConvertOptions();
         const convertTypeOptions = Object.keys(convertValueOptions);
 
         me.converters.set(`Unit converter`, {
@@ -31,16 +37,24 @@ class ConverterManager {
                 { type: `typedOption`, defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions },
                 { type: `typedOption`, defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions }
             ],
-            exec: (a1, a2, a3, value) => ConverterManager._execConvert(a1, a2, a3, value)
+            exec: (a1, a2, a3, value) => ConverterManager._execUnitConvert(a1, a2, a3, value)
         });
     }
 
+    /**
+     * Returns converters Map
+     * @returns {Map}
+     */
     getConvertersMap() {
         const me = this;
 
         return me.converters;
     }
 
+    /**
+     * Returns list on converters
+     * @returns {Array}
+     */
     getConvertersList() {
         const me = this;
         const result = [];
@@ -52,18 +66,32 @@ class ConverterManager {
         return result;
     }
 
+    /**
+     * Get list of converter names
+     * @returns {Array}
+     */
     getConvertersNameList() {
         const me = this;
 
         return Array.from(me.converters.keys());
     }
 
+    /**
+     * Return converter config object by converter name
+     * @param converterName
+     * @returns {Object}
+     */
     getConverterObject(converterName) {
         const me = this;
 
         return me.converters.get(converterName);
     }
 
+    /**
+     * Returns default values of converter as object
+     * @param converterName
+     * @returns {Object}
+     */
     getConverterDefaultValuesObject(converterName) {
         const me = this;
 
@@ -73,6 +101,26 @@ class ConverterManager {
         }, {});
     }
 
+    /**
+     * Returns converter options
+     * @returns {Object}
+     */
+    static getUnitConvertOptions () {
+        return {
+            temperature: [ 'c', 'f', 'k' ],
+            length: [ 'm', 'mi', 'yd', 'ft', 'in' ],
+            weight: [ 'kg', 'lb', 'oz' ],
+            volume: [ 'l', 'gal', 'pt' ]
+        }
+    }
+
+    /**
+     * Convert value
+     * @param converterName
+     * @param value
+     * @param args
+     * @returns {value}
+     */
     convert(converterName, value, args) {
         const me = this;
         let result = value;
@@ -88,6 +136,12 @@ class ConverterManager {
         return result;
     }
 
+    /**
+     * Casting arguments to appropriate type
+     * @param value
+     * @param argument
+     * @private
+     */
     static _castArgument(value, argument) {
         let result = argument.defaultValue;
 
@@ -105,16 +159,16 @@ class ConverterManager {
         return result;
     }
 
-    static getConvertOptions () {
-        return {
-            temperature: [ 'c', 'f', 'k' ],
-            length: [ 'm', 'mi', 'yd', 'ft', 'in' ],
-            weight: [ 'kg', 'lb', 'oz' ],
-            volume: [ 'l', 'gal', 'pt' ]
-        }
-    }
-
-    static _execConvert (type, from, to, value) {
+    /**
+     * Execute unit convert
+     * @param type
+     * @param from
+     * @param to
+     * @param value
+     * @returns {*}
+     * @private
+     */
+    static _execUnitConvert (type, from, to, value) {
         let result = value;
 
         from = from.toUpperCase();
@@ -138,6 +192,14 @@ class ConverterManager {
         return result;
     }
 
+    /**
+     * Convert temperature
+     * @param from
+     * @param to
+     * @param value
+     * @returns {*}
+     * @private
+     */
     static _convertTemperature (from, to, value) {
         let result = value;
 
@@ -165,6 +227,14 @@ class ConverterManager {
         return result;
     }
 
+    /**
+     * Convert Length
+     * @param from
+     * @param to
+     * @param value
+     * @returns {*}
+     * @private
+     */
     static _convertLength (from, to, value) {
         let result = value;
 
@@ -234,6 +304,14 @@ class ConverterManager {
         return result;
     }
 
+    /**
+     * Convert Weight
+     * @param from
+     * @param to
+     * @param value
+     * @returns {*}
+     * @private
+     */
     static _convertWeight (from, to, value) {
         let result = value;
 
@@ -261,6 +339,14 @@ class ConverterManager {
         return result;
     }
 
+    /**
+     * Convert Volume
+     * @param from
+     * @param to
+     * @param value
+     * @returns {*}
+     * @private
+     */
     static _convertVolume (from, to, value) {
         let result = value;
 

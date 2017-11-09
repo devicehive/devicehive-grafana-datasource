@@ -71,7 +71,6 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
 
                 /**
                  * Function used by Grafana to query data
-                 *
                  * @param {Object} options
                  * @returns
                  * @memberof DeviceHiveDatasource

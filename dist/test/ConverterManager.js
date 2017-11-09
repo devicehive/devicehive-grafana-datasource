@@ -14,7 +14,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Value converter manager
+ */
 var ConverterManager = function () {
+
+    /**
+     * Create new ConverterManager
+     */
     function ConverterManager() {
         _classCallCheck(this, ConverterManager);
 
@@ -36,16 +43,22 @@ var ConverterManager = function () {
             }
         });
 
-        var convertValueOptions = ConverterManager.getConvertOptions();
+        var convertValueOptions = ConverterManager.getUnitConvertOptions();
         var convertTypeOptions = Object.keys(convertValueOptions);
 
         me.converters.set('Unit converter', {
             arguments: [{ type: 'option', defaultValue: convertTypeOptions[0], options: convertTypeOptions }, { type: 'typedOption', defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions }, { type: 'typedOption', defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions }],
             exec: function exec(a1, a2, a3, value) {
-                return ConverterManager._execConvert(a1, a2, a3, value);
+                return ConverterManager._execUnitConvert(a1, a2, a3, value);
             }
         });
     }
+
+    /**
+     * Returns converters Map
+     * @returns {Map}
+     */
+
 
     _createClass(ConverterManager, [{
         key: 'getConvertersMap',
@@ -54,6 +67,12 @@ var ConverterManager = function () {
 
             return me.converters;
         }
+
+        /**
+         * Returns list on converters
+         * @returns {Array}
+         */
+
     }, {
         key: 'getConvertersList',
         value: function getConvertersList() {
@@ -66,6 +85,12 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Get list of converter names
+         * @returns {Array}
+         */
+
     }, {
         key: 'getConvertersNameList',
         value: function getConvertersNameList() {
@@ -73,6 +98,13 @@ var ConverterManager = function () {
 
             return Array.from(me.converters.keys());
         }
+
+        /**
+         * Return converter config object by converter name
+         * @param converterName
+         * @returns {Object}
+         */
+
     }, {
         key: 'getConverterObject',
         value: function getConverterObject(converterName) {
@@ -80,6 +112,13 @@ var ConverterManager = function () {
 
             return me.converters.get(converterName);
         }
+
+        /**
+         * Returns default values of converter as object
+         * @param converterName
+         * @returns {Object}
+         */
+
     }, {
         key: 'getConverterDefaultValuesObject',
         value: function getConverterDefaultValuesObject(converterName) {
@@ -90,8 +129,23 @@ var ConverterManager = function () {
                 return obj;
             }, {});
         }
+
+        /**
+         * Returns converter options
+         * @returns {Object}
+         */
+
     }, {
         key: 'convert',
+
+
+        /**
+         * Convert value
+         * @param converterName
+         * @param value
+         * @param args
+         * @returns {value}
+         */
         value: function convert(converterName, value, args) {
             var me = this;
             var result = value;
@@ -107,7 +161,25 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Casting arguments to appropriate type
+         * @param value
+         * @param argument
+         * @private
+         */
+
     }], [{
+        key: 'getUnitConvertOptions',
+        value: function getUnitConvertOptions() {
+            return {
+                temperature: ['c', 'f', 'k'],
+                length: ['m', 'mi', 'yd', 'ft', 'in'],
+                weight: ['kg', 'lb', 'oz'],
+                volume: ['l', 'gal', 'pt']
+            };
+        }
+    }, {
         key: '_castArgument',
         value: function _castArgument(value, argument) {
             var result = argument.defaultValue;
@@ -125,19 +197,20 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Execute unit convert
+         * @param type
+         * @param from
+         * @param to
+         * @param value
+         * @returns {*}
+         * @private
+         */
+
     }, {
-        key: 'getConvertOptions',
-        value: function getConvertOptions() {
-            return {
-                temperature: ['c', 'f', 'k'],
-                length: ['m', 'mi', 'yd', 'ft', 'in'],
-                weight: ['kg', 'lb', 'oz'],
-                volume: ['l', 'gal', 'pt']
-            };
-        }
-    }, {
-        key: '_execConvert',
-        value: function _execConvert(type, from, to, value) {
+        key: '_execUnitConvert',
+        value: function _execUnitConvert(type, from, to, value) {
             var result = value;
 
             from = from.toUpperCase();
@@ -160,6 +233,16 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Convert temperature
+         * @param from
+         * @param to
+         * @param value
+         * @returns {*}
+         * @private
+         */
+
     }, {
         key: '_convertTemperature',
         value: function _convertTemperature(from, to, value) {
@@ -188,6 +271,16 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Convert Length
+         * @param from
+         * @param to
+         * @param value
+         * @returns {*}
+         * @private
+         */
+
     }, {
         key: '_convertLength',
         value: function _convertLength(from, to, value) {
@@ -258,6 +351,16 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Convert Weight
+         * @param from
+         * @param to
+         * @param value
+         * @returns {*}
+         * @private
+         */
+
     }, {
         key: '_convertWeight',
         value: function _convertWeight(from, to, value) {
@@ -286,6 +389,16 @@ var ConverterManager = function () {
 
             return result;
         }
+
+        /**
+         * Convert Volume
+         * @param from
+         * @param to
+         * @param value
+         * @returns {*}
+         * @private
+         */
+
     }, {
         key: '_convertVolume',
         value: function _convertVolume(from, to, value) {

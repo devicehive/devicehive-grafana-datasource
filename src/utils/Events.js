@@ -1,12 +1,23 @@
 
+/**
+ * EventTarget implementation
+ */
 class Events {
 
+    /**
+     * Create new Events object
+     */
     constructor () {
         const me = this;
 
         me.listeners = new Map();
     }
 
+    /**
+     * Add event listener
+     * @param eventName
+     * @param callback
+     */
     addEventListener(eventName, callback) {
         const me = this;
 
@@ -17,6 +28,11 @@ class Events {
         me.listeners.get(eventName).push(callback);
     }
 
+    /**
+     * Remove event listener
+     * @param eventName
+     * @param callback
+     */
     removeEventListener (eventName, callback) {
         const me = this;
 
@@ -34,21 +50,26 @@ class Events {
         }
     }
 
+    /**
+     * Fire event
+     * @param eventName
+     * @returns {boolean}
+     */
     dispatchEvent (eventName) {
         const me = this;
 
-        if (!me.listeners.has(eventName)) {
-            return true;
+        if (me.listeners.has(eventName)) {
+            const stack = me.listeners.get(eventName);
+
+            for (let i = 0, l = stack.length; i < l; i++) {
+                stack[i].call(me);
+            }
+
         }
 
-        const stack = me.listeners.get(eventName);
-
-        for (let i = 0, l = stack.length; i < l; i++) {
-            stack[i].call(me);
-        }
-
-        return;
+        return true;
     }
 }
+
 
 export default Events;

@@ -117,7 +117,7 @@ System.register(['angular', './ConverterManager.js'], function (_export, _contex
                         };
 
                         scope.onTypeChange = function () {
-                            var optionValue = ConverterManager.getConvertOptions()[scope.argValues[0]][0];
+                            var optionValue = ConverterManager.getUnitConvertOptions()[scope.argValues[0]][0];
 
                             Object.keys(scope.argValues).forEach(function (key, index) {
                                 scope.argValues[key] = index === 0 ? scope.argValues[key] : optionValue;

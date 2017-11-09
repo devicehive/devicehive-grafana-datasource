@@ -26,6 +26,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var converterManager = new _ConverterManager2.default();
 
+/**
+ * DeviceHive datasource QueryCtrl.
+ * A JavaScript class that will be instantiated and treated as an Angular controller
+ * when the user edits metrics in a panel. This class has to inherit from the app/plugins/sdk.QueryCtrl class.
+ */
+
 var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
     _inherits(DeviceHiveDatasourceQueryCtrl, _QueryCtrl);
 
@@ -53,6 +59,12 @@ var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
         return _this;
     }
 
+    /**
+     * Add converter handler
+     * @param converterName
+     */
+
+
     _createClass(DeviceHiveDatasourceQueryCtrl, [{
         key: 'onAddConverter',
         value: function onAddConverter(converterName) {
@@ -63,6 +75,12 @@ var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
                 argValues: converterManager.getConverterDefaultValuesObject(converterName)
             });
         }
+
+        /**
+         * Delete converter handler
+         * @param index
+         */
+
     }, {
         key: 'onDeleteConverter',
         value: function onDeleteConverter(index) {
@@ -73,7 +91,6 @@ var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
 
         /**
          * Refresh data every time query params change.
-         *
          * @memberof DeviceHiveDatasourceQueryCtrl
          */
 

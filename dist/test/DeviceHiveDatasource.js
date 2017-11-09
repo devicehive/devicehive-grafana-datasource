@@ -25,7 +25,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var converterManager = new _ConverterManager2.default();
 
 /**
- *
+ * DeviceHive datasource class
+ * Datasource object communicates with the database and transforms data to times series.
  */
 
 var DeviceHiveDatasource = function () {
@@ -59,7 +60,6 @@ var DeviceHiveDatasource = function () {
 
     /**
      * Function used by Grafana to query data
-     *
      * @param {Object} options
      * @returns
      * @memberof DeviceHiveDatasource
@@ -96,7 +96,7 @@ var DeviceHiveDatasource = function () {
         }
 
         /**
-         *
+         * Used by dashboards to get annotations
          * @param options
          * @returns {Promise}
          */
@@ -124,7 +124,6 @@ var DeviceHiveDatasource = function () {
 
         /**
          * Function used by Grafana to test datasource
-         *
          * @returns
          * @memberof DeviceHiveDatasource
          */
@@ -142,7 +141,7 @@ var DeviceHiveDatasource = function () {
         }
 
         /**
-         *
+         * Converting value by ConverterManager
          * @param value
          * @param converters
          * @private
@@ -157,7 +156,7 @@ var DeviceHiveDatasource = function () {
         }
 
         /**
-         *
+         * Transform template variable to it's values
          * @param stringWithVariables
          * @return {*}
          * @private
@@ -173,7 +172,6 @@ var DeviceHiveDatasource = function () {
 
         /**
          * Internal function to extract value from object based on path
-         *
          * @param {Object} object
          * @param {String} path
          * @returns
@@ -196,7 +194,7 @@ var DeviceHiveDatasource = function () {
         }
 
         /**
-         *
+         * Generate DeviceHive WS request object
          * @param target
          * @param allOptions
          * @param limit

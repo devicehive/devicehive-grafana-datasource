@@ -17,6 +17,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var converterManager = new _ConverterManager2.default();
 var templatesRoot = 'public/plugins/devicehive-devicehive-datasource/partials';
 
+/**
+ * ConverterSelector angular directive class
+ */
+
 var ConverterSelector = function () {
     function ConverterSelector() {
         _classCallCheck(this, ConverterSelector);
@@ -53,6 +57,11 @@ var ConverterSelector = function () {
 
     return ConverterSelector;
 }();
+
+/**
+ * Converter angular directive class
+ */
+
 
 var Converter = function () {
     function Converter() {
@@ -95,7 +104,7 @@ var Converter = function () {
             };
 
             scope.onTypeChange = function () {
-                var optionValue = _ConverterManager2.default.getConvertOptions()[scope.argValues[0]][0];
+                var optionValue = _ConverterManager2.default.getUnitConvertOptions()[scope.argValues[0]][0];
 
                 Object.keys(scope.argValues).forEach(function (key, index) {
                     scope.argValues[key] = index === 0 ? scope.argValues[key] : optionValue;

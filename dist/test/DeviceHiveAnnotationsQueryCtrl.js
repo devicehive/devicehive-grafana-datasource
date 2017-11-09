@@ -7,12 +7,14 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- *
+ * DeviceHive annotations QueryCtrl.
+ * A JavaScript class that will be instantiated and treated as an Angular controller
+ * when the user choose this type of datasource in the templating menu in the dashboard.
  */
 var DeviceHiveAnnotationsQueryCtrl =
 
 /**
- *
+ * Create new DeviceHiveAnnotationsQueryCtrl
  */
 function DeviceHiveAnnotationsQueryCtrl() {
     _classCallCheck(this, DeviceHiveAnnotationsQueryCtrl);

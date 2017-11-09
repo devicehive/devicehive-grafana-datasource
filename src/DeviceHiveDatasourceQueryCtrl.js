@@ -5,6 +5,12 @@ import ConverterManager from './ConverterManager.js';
 
 const converterManager = new ConverterManager();
 
+
+/**
+ * DeviceHive datasource QueryCtrl.
+ * A JavaScript class that will be instantiated and treated as an Angular controller
+ * when the user edits metrics in a panel. This class has to inherit from the app/plugins/sdk.QueryCtrl class.
+ */
 class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
 
     /**
@@ -28,6 +34,10 @@ class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
         me.showHelp = false;
     }
 
+    /**
+     * Add converter handler
+     * @param converterName
+     */
     onAddConverter(converterName) {
         const me = this;
 
@@ -37,6 +47,10 @@ class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
         });
     }
 
+    /**
+     * Delete converter handler
+     * @param index
+     */
     onDeleteConverter(index) {
         const me = this;
 
@@ -45,7 +59,6 @@ class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
 
     /**
      * Refresh data every time query params change.
-     *
      * @memberof DeviceHiveDatasourceQueryCtrl
      */
     onChangeInternal() {

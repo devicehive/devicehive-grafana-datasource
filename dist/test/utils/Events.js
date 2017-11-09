@@ -8,7 +8,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * EventTarget implementation
+ */
 var Events = function () {
+
+    /**
+     * Create new Events object
+     */
     function Events() {
         _classCallCheck(this, Events);
 
@@ -16,6 +23,13 @@ var Events = function () {
 
         me.listeners = new Map();
     }
+
+    /**
+     * Add event listener
+     * @param eventName
+     * @param callback
+     */
+
 
     _createClass(Events, [{
         key: "addEventListener",
@@ -28,6 +42,13 @@ var Events = function () {
 
             me.listeners.get(eventName).push(callback);
         }
+
+        /**
+         * Remove event listener
+         * @param eventName
+         * @param callback
+         */
+
     }, {
         key: "removeEventListener",
         value: function removeEventListener(eventName, callback) {
@@ -46,22 +67,27 @@ var Events = function () {
                 }
             }
         }
+
+        /**
+         * Fire event
+         * @param eventName
+         * @returns {boolean}
+         */
+
     }, {
         key: "dispatchEvent",
         value: function dispatchEvent(eventName) {
             var me = this;
 
-            if (!me.listeners.has(eventName)) {
-                return true;
+            if (me.listeners.has(eventName)) {
+                var stack = me.listeners.get(eventName);
+
+                for (var i = 0, l = stack.length; i < l; i++) {
+                    stack[i].call(me);
+                }
             }
 
-            var stack = me.listeners.get(eventName);
-
-            for (var i = 0, l = stack.length; i < l; i++) {
-                stack[i].call(me);
-            }
-
-            return;
+            return true;
         }
     }]);
 

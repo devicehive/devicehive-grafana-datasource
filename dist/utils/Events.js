@@ -33,6 +33,10 @@ System.register([], function (_export, _context) {
             }();
 
             Events = function () {
+
+                /**
+                 * Create new Events object
+                 */
                 function Events() {
                     _classCallCheck(this, Events);
 
@@ -40,6 +44,13 @@ System.register([], function (_export, _context) {
 
                     me.listeners = new Map();
                 }
+
+                /**
+                 * Add event listener
+                 * @param eventName
+                 * @param callback
+                 */
+
 
                 _createClass(Events, [{
                     key: "addEventListener",
@@ -75,17 +86,15 @@ System.register([], function (_export, _context) {
                     value: function dispatchEvent(eventName) {
                         var me = this;
 
-                        if (!me.listeners.has(eventName)) {
-                            return true;
+                        if (me.listeners.has(eventName)) {
+                            var stack = me.listeners.get(eventName);
+
+                            for (var i = 0, l = stack.length; i < l; i++) {
+                                stack[i].call(me);
+                            }
                         }
 
-                        var stack = me.listeners.get(eventName);
-
-                        for (var i = 0, l = stack.length; i < l; i++) {
-                            stack[i].call(me);
-                        }
-
-                        return;
+                        return true;
                     }
                 }]);
 

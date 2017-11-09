@@ -23,7 +23,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
- *
+ * DeviceHive api class
  */
 var DeviceHive = function (_Events) {
     _inherits(DeviceHive, _Events);
@@ -101,7 +101,6 @@ var DeviceHive = function (_Events) {
 
         /**
          * Internal `authenticate` message sender
-         *
          * @param {String} accessToken
          * @memberof DeviceHive
          */
@@ -132,7 +131,7 @@ var DeviceHive = function (_Events) {
         }
 
         /**
-         *
+         * Waits for WS session to be opened
          * @return {Promise}
          * @private
          */

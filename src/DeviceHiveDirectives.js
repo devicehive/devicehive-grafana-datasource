@@ -5,6 +5,9 @@ const converterManager = new ConverterManager();
 const templatesRoot = `public/plugins/devicehive-devicehive-datasource/partials`;
 
 
+/**
+ * ConverterSelector angular directive class
+ */
 class ConverterSelector {
 
     constructor() {
@@ -37,6 +40,9 @@ class ConverterSelector {
 }
 
 
+/**
+ * Converter angular directive class
+ */
 class Converter {
 
     constructor() {
@@ -75,7 +81,7 @@ class Converter {
         };
 
         scope.onTypeChange = function () {
-            const optionValue = ConverterManager.getConvertOptions()[scope.argValues[0]][0];
+            const optionValue = ConverterManager.getUnitConvertOptions()[scope.argValues[0]][0];
 
             Object.keys(scope.argValues).forEach(function(key, index) {
                 scope.argValues[key] = index === 0 ? scope.argValues[key] : optionValue

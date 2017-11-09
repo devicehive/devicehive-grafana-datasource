@@ -4,8 +4,10 @@ import ConverterManager from './ConverterManager.js';
 
 const converterManager = new ConverterManager();
 
+
 /**
- *
+ * DeviceHive datasource class
+ * Datasource object communicates with the database and transforms data to times series.
  */
 class DeviceHiveDatasource {
 
@@ -36,7 +38,6 @@ class DeviceHiveDatasource {
 
     /**
      * Function used by Grafana to query data
-     *
      * @param {Object} options
      * @returns
      * @memberof DeviceHiveDatasource
@@ -71,7 +72,7 @@ class DeviceHiveDatasource {
     }
 
     /**
-     *
+     * Used by dashboards to get annotations
      * @param options
      * @returns {Promise}
      */
@@ -97,7 +98,6 @@ class DeviceHiveDatasource {
 
     /**
      * Function used by Grafana to test datasource
-     *
      * @returns
      * @memberof DeviceHiveDatasource
      */
@@ -110,7 +110,7 @@ class DeviceHiveDatasource {
     }
 
     /**
-     *
+     * Converting value by ConverterManager
      * @param value
      * @param converters
      * @private
@@ -121,7 +121,7 @@ class DeviceHiveDatasource {
     }
 
     /**
-     *
+     * Transform template variable to it's values
      * @param stringWithVariables
      * @return {*}
      * @private
@@ -134,7 +134,6 @@ class DeviceHiveDatasource {
 
     /**
      * Internal function to extract value from object based on path
-     *
      * @param {Object} object
      * @param {String} path
      * @returns
@@ -150,7 +149,7 @@ class DeviceHiveDatasource {
     }
 
     /**
-     *
+     * Generate DeviceHive WS request object
      * @param target
      * @param allOptions
      * @param limit
