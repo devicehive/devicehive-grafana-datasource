@@ -1,20 +1,19 @@
 <query-editor-row query-ctrl="ctrl" class="generic-datasource-query-row" has-text-edit-mode="true">
     <div class="gf-form-inline">
-
-        <div class="gf-form-select-wrapper width-12 gf-form-select-wrapper--has-help-icon">
+        <div class="gf-form gf-form-select-wrapper width-12 gf-form-select-wrapper--has-help-icon">
             <select class="gf-form-input" ng-model="ctrl.target.type"
                     ng-options="f as f for f in ['command', 'notification']"
                     ng-change="ctrl.onChangeInternal()"></select>
             <info-popover mode="right-absolute">Entity</info-popover>
         </div>
 
-        <div class="gf-form width-18 gf-form-input-wrapper--has-help-icon">
+        <div class="gf-form gf-form-input-wrapper width-14 gf-form-input-wrapper--has-help-icon">
             <input class="gf-form-input" ng-model="ctrl.target.name" spellcheck="false"
                    ng-blur="ctrl.onChangeInternal()" placeholder="{{ ctrl.target.type }} name"/>
             <info-popover mode="right-absolute">Name</info-popover>
         </div>
 
-        <div class="gf-form width-18 gf-form-input-wrapper--has-help-icon">
+        <div class="gf-form gf-form-input-wrapper width-20 gf-form-input-wrapper--has-help-icon">
             <input class="gf-form-input" ng-model="ctrl.target.dataPath" spellcheck="false"
                    ng-blur="ctrl.onChangeInternal()" placeholder="Path: (parameters...)"/>
             <info-popover mode="right-absolute">Data Path</info-popover>
@@ -33,37 +32,70 @@
             <div class="gf-form-label gf-form-label--grow"></div>
         </div>
 
-        <div class="gf-form">
-            <label class="gf-form-label width-7 query-keyword" ng-click="ctrl.showHelp = !ctrl.showHelp">
-                {{ ctrl.showHelp ? "Hide help" : "Show Help" }}
-                <i class="fa fa-caret-down" ng-show="ctrl.showHelp"></i>
-                <i class="fa fa-caret-right" ng-hide="ctrl.showHelp"></i>
-            </label>
-        </div>
-
+        <label class="gf-form gf-form-label width-7 query-keyword" ng-click="ctrl.showHelp = !ctrl.showHelp">
+            {{ ctrl.showHelp ? "Hide help" : "Show Help" }}
+            <i class="fa fa-caret-down" ng-show="ctrl.showHelp"></i>
+            <i class="fa fa-caret-right" ng-hide="ctrl.showHelp"></i>
+        </label>
     </div>
 
     <div class="gf-form" ng-show="ctrl.showHelp">
-    <pre class="gf-form-pre alert alert-info help-information">
+        <div class="grafana-info-box">
 
-        <b>- Entity</b>
-        <b><i>Command</i></b>: represents a message dispatched by clients for devices
-        <b><i>Notification</i></b>: represents a message dispatched by devices for clients
-        <br>
-        <b>- Name</b>
-        Name clarification
-        <br>
-        <b>- Data path</b>
-        Data path clarification
-        <br>
-        <b>- Scale</b>
-        Scale clarification
+            <h4><i><b>Entity</b></i></h4>
+            <div style="margin-left: 30px;">
+                <b><i>Command</i></b>: represents a message dispatched by clients for devices<br>
+                <b><i>Notification</i></b>: represents a message dispatched by devices for clients<br>
+            </div>
+            <br>
+            <h4><i><b>Name</b></i></h4>
+            <div style="margin-left: 30px;">
+                Name is a string value of the notification/command field in a notification/command JSON object.<br>
+                Examples:<br><br>
+                <b>Notification:</b> <code> { ..., notification: { notification: [<b>this-is-a-notification-name-value</b>], ... }, ... } </code><br><br>
+                <b>Command:</b> <code> { ..., command: { command: [<b>this-is-a-command-name-value</b>], ... }, ... } </code><br>
+            </div>
+            <br>
+            <h4><i><b>Data path</b></i></h4>
+            <div style="margin-left: 30px;">
+                Since a notification/command is a JSON object, Data Path is a simple point-separated value.<br>
+                A basic structure of tne notification/command object is described here
+                <a href="https://docs.devicehive.com/docs/notificationinsert" target="_blank">Notification</a> and here
+                <a href="https://docs.devicehive.com/docs/commandinsert" target="_blank">Command</a><br>
+            </div>
+            <br>
+            <h4><i><b>Converters</b></i></h4>
+            <div style="margin-left: 30px;">
+                After clicking on the "Add converter" button (<img src="public/plugins/devicehive-devicehive-datasource/img/add-converter.png" width="25" height="25">)
+                you will be able to select converter.<br>
+                Converter is the simple function that transforms the value in some way.<br>
+                For now the DeviceHive datasource supports next type of converters:
+                <ul>
+                    <li><b>Scale</b> - multiplies by a given value</li>
+                    <li><b>Offset</b> - adds a given value</li>
+                    <li><b>Unit converter</b> - converts value between different units of below mentioned measurement types:
+                        <ul>
+                            <li><b>Temperature</b> ('c' - Celsius, 'f' - Fahrenheit, 'k' - Kelvin)</li>
+                            <li><b>Length</b> ('m' - Meter, 'mi' - Mile, 'yd' - Yard, 'ft' - Feet, 'in' - Inch)</li>
+                            <li><b>Weight</b> ('kg' - Kilogram, 'lb' - Pound, 'oz' - Ounces)</li>
+                            <li><b>Volume</b> ('l' - Liter, 'gal' - Gallon, 'pt' - Pint)</li>
+                        </ul>
+                    </li>
+                </ul><br>
+                <img src="public/plugins/devicehive-devicehive-datasource/img/collapse-converter-selector.png" width="25" height="25"> will collapse converter selector<br><br>
+                By clicking on the converter arrow icon the edit panel will be shown.<br><br>
+                Click <img src="public/plugins/devicehive-devicehive-datasource/img/reselect-converter.png" width="20" height="20"> to reselect converter
+                or <img src="public/plugins/devicehive-devicehive-datasource/img/delete-converter.png" width="20" height="20"> to delete converter.
 
-        <hr>
-        <a href="https://docs.devicehive.com/docs" target="_blank">Official documentation</a>
-        <a href="https://github.com/devicehive" target="_blank">GitHub</a>
+            </div>
+            <br>
+            <hr>
+            <a href="https://devicehive.com" target="_blank">Official site</a><br>
+            <a href="https://docs.devicehive.com/docs" target="_blank">Official documentation</a><br>
+            <a href="https://playground.devicehive.com" target="_blank">Official playground</a><br>
+            <a href="https://github.com/devicehive" target="_blank">GitHub</a>
 
-    </pre>
+        </div>
     </div>
 
 </query-editor-row>

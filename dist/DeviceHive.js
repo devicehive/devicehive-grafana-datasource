@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash"], function (_export, _context) {
+System.register(["lodash", "./utils/Events"], function (_export, _context) {
     "use strict";
 
-    var lodash, _createClass, DeviceHive;
+    var lodash, Events, _createClass, DeviceHive;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -11,9 +11,35 @@ System.register(["lodash"], function (_export, _context) {
         }
     }
 
+    function _possibleConstructorReturn(self, call) {
+        if (!self) {
+            throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+        }
+
+        return call && (typeof call === "object" || typeof call === "function") ? call : self;
+    }
+
+    function _inherits(subClass, superClass) {
+        if (typeof superClass !== "function" && superClass !== null) {
+            throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+        }
+
+        subClass.prototype = Object.create(superClass && superClass.prototype, {
+            constructor: {
+                value: subClass,
+                enumerable: false,
+                writable: true,
+                configurable: true
+            }
+        });
+        if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+    }
+
     return {
         setters: [function (_lodash) {
             lodash = _lodash.default;
+        }, function (_utilsEvents) {
+            Events = _utilsEvents.default;
         }],
         execute: function () {
             _createClass = function () {
@@ -34,7 +60,8 @@ System.register(["lodash"], function (_export, _context) {
                 };
             }();
 
-            DeviceHive = function () {
+            DeviceHive = function (_Events) {
+                _inherits(DeviceHive, _Events);
 
                 /**
                  * Creates an instance of DeviceHive.
@@ -49,7 +76,9 @@ System.register(["lodash"], function (_export, _context) {
 
                     _classCallCheck(this, DeviceHive);
 
-                    var me = this;
+                    var _this = _possibleConstructorReturn(this, (DeviceHive.__proto__ || Object.getPrototypeOf(DeviceHive)).call(this));
+
+                    var me = _this;
 
                     if (serverUrl && (login && password || token)) {
                         me.socket = new WebSocket(serverUrl);
@@ -69,6 +98,7 @@ System.register(["lodash"], function (_export, _context) {
                     } else {
                         throw new Error("You need to specify URL, login and password or token");
                     }
+                    return _this;
                 }
 
                 /**
@@ -146,7 +176,7 @@ System.register(["lodash"], function (_export, _context) {
                 }]);
 
                 return DeviceHive;
-            }();
+            }(Events);
 
             _export("default", DeviceHive);
         }

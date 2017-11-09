@@ -1,10 +1,10 @@
 import lodash from "lodash";
-
+import Events from "./utils/Events";
 
 /**
  *
  */
-class DeviceHive {
+class DeviceHive extends Events {
 
     /**
      * Creates an instance of DeviceHive.
@@ -12,6 +12,8 @@ class DeviceHive {
      * @memberof DeviceHive
      */
     constructor({ login, password, serverUrl, token }) {
+        super();
+
         const me = this;
 
         if (serverUrl && ((login && password) || token )) {

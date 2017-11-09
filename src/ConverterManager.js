@@ -8,24 +8,24 @@ class ConverterManager {
 
         me.converters = new Map();
 
-        me.converters.set(`offset`, {
+        me.converters.set(`Offset`, {
             arguments: [
                 { type: `number`, defaultValue: 0 }
             ],
             exec: (a1, value) => a1 + value
         });
 
-        me.converters.set(`scale`, {
+        me.converters.set(`Scale`, {
             arguments: [
                 { type: `number`, defaultValue: 1 }
             ],
             exec: (a1, value) => a1 * value
         });
 
-        const convertValueOptions = ConverterManager._getConvertOptions();
+        const convertValueOptions = ConverterManager.getConvertOptions();
         const convertTypeOptions = Object.keys(convertValueOptions);
 
-        me.converters.set(`convert`, {
+        me.converters.set(`Unit converter`, {
             arguments: [
                 { type: `option`, defaultValue: convertTypeOptions[0], options: convertTypeOptions },
                 { type: `typedOption`, defaultValue: convertValueOptions[convertTypeOptions[0]][0], options: convertValueOptions },
@@ -73,7 +73,6 @@ class ConverterManager {
         }, {});
     }
 
-
     convert(converterName, value, args) {
         const me = this;
         let result = value;
@@ -106,9 +105,9 @@ class ConverterManager {
         return result;
     }
 
-    static _getConvertOptions () {
+    static getConvertOptions () {
         return {
-            temperature: [ 'C', 'F', 'K' ],
+            temperature: [ 'c', 'f', 'k' ],
             length: [ 'm', 'mi', 'yd', 'ft', 'in' ],
             weight: [ 'kg', 'lb', 'oz' ],
             volume: [ 'l', 'gal', 'pt' ]
@@ -166,70 +165,69 @@ class ConverterManager {
         return result;
     }
 
-    //ength: [ 'm', 'mi', 'yd', 'ft', 'in' ],
     static _convertLength (from, to, value) {
         let result = value;
 
         switch (from + to) {
             case 'MMI':
-                result = (value * 9 / 5) + 32;
+                result = value * 0.00062137;
                 break;
             case 'MYD':
-                result = value + 273.15;
+                result = value * 1.0936;
                 break;
             case 'MFT':
-                result = (value - 32) * 5 / 9;
+                result = value / 0.3048;
                 break;
             case 'MIN':
-                result = (value + 459.67) * 5 / 9;
+                result = value / 0.0254;
                 break;
             case 'MIM':
-                result = value + 273.15;
+                result = value / 0.00062137;
                 break;
             case 'MIYD':
-                result = (value - 32) * 5 / 9;
+                result = value * 1760.0;
                 break;
             case 'MIFT':
-                result = (value + 459.67) * 5 / 9;
+                result = value * 5280.0;
                 break;
             case 'MIIN':
-                result = (value * 9 / 5) + 32;
+                result = value * 63360;
                 break;
             case 'YDM':
-                result = value + 273.15;
+                result = value / 1.0936;
                 break;
             case 'YDMI':
-                result = (value - 32) * 5 / 9;
+                result = value * 0.00056818;
                 break;
             case 'YDFT':
-                result = (value + 459.67) * 5 / 9;
+                result = value * 3.0000;
                 break;
             case 'YDIN':
-                result = (value * 9 / 5) + 32;
+                result = value * 36.000;
                 break;
             case 'FTM':
-                result = value + 273.15;
+                result = value / 3.2808399;
                 break;
             case 'FTMI':
-                result = (value - 32) * 5 / 9;
+                result = value * 0.00018939;
                 break;
             case 'FTYD':
-                result = (value + 459.67) * 5 / 9;
+                result = value * 0.33333;
                 break;
             case 'FTIN':
-                result = (value * 9 / 5) + 32;
+                result = value * 12;
                 break;
             case 'INM':
-                result = value + 273.15;
+                result = value * 0.0254;
                 break;
             case 'INMI':
-                result = (value - 32) * 5 / 9;
+                result = value / 63.360;
                 break;
-            case 'IN':
-                result = (value + 459.67) * 5 / 9;
+            case 'INYD':
+                result = value * 0.027778;
                 break;
-            case 'IN':
-                result = (value + 459.67) * 5 / 9;
+            case 'INFT':
+                result = value / 12;
                 break;
         }
 
@@ -240,23 +238,23 @@ class ConverterManager {
         let result = value;
 
         switch (from + to) {
-            case 'CF':
-                result = (value * 9 / 5) + 32;
+            case 'KGLB':
+                result = value / 0.45359237;
                 break;
-            case 'CK':
-                result = value + 273.15;
+            case 'KGOZ':
+                result = value / 0.02834952;
                 break;
-            case 'FC':
-                result = (value - 32) * 5 / 9;
+            case 'LBKG':
+                result = value * 0.45359237;
                 break;
-            case 'FK':
-                result = (value + 459.67) * 5 / 9;
+            case 'LBOZ':
+                result = value * 16;
                 break;
-            case 'KC':
-                result = value - 273.15;
+            case 'OZKG':
+                result = value * 0.02834952;
                 break;
-            case 'KF':
-                result = (value * 9 / 5) - 459.67;
+            case 'OZLB':
+                result = value / 16;
                 break;
         }
 
@@ -267,23 +265,23 @@ class ConverterManager {
         let result = value;
 
         switch (from + to) {
-            case 'CF':
-                result = (value * 9 / 5) + 32;
+            case 'LGAL':
+                result = value * 0.26417;
                 break;
-            case 'CK':
-                result = value + 273.15;
+            case 'LPT':
+                result = value / 2.113376;
                 break;
-            case 'FC':
-                result = (value - 32) * 5 / 9;
+            case 'GALL':
+                result = value / 0.26417;
                 break;
-            case 'FK':
-                result = (value + 459.67) * 5 / 9;
+            case 'GALPT':
+                result = value * 8;
                 break;
-            case 'KC':
-                result = value - 273.15;
+            case 'PTL':
+                result = value / 1.7598;
                 break;
-            case 'KF':
-                result = (value * 9 / 5) - 459.67;
+            case 'PTGAL':
+                result = value / 8;
                 break;
         }
 

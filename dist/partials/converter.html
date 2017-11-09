@@ -1,9 +1,11 @@
 <div ng-if="!isConverterSelected">
-    <converter-selector
-            only-selector="true"
-            on-blur="isConverterSelected = true"
-            on-select="onConverterSelect(converterName)">
-    </converter-selector>
+    <div class="gf-form-inline">
+        <converter-selector
+                only-selector="true"
+                on-blur="isConverterSelected = true"
+                on-select="onConverterSelect(converterName)">
+        </converter-selector>
+    </div>
 </div>
 <div ng-if="isConverterSelected">
     <div class="gf-form-inline">
@@ -14,12 +16,14 @@
             <i class="fa fa-refresh" style="margin-left: 3px;" ng-show="showEditPanel" ng-click="changeConverter()"></i>
             <i class="fa fa-close" style="margin-left: 3px;" ng-show="showEditPanel" ng-click="onDelete()"></i>
         </label>
-        <div ng-repeat="argument in config.arguments track by $index">
-            <input ng-if="argument.type === 'number'" class="gf-form-input width-4"
+        <div class="gf-form-inline" ng-repeat="argument in config.arguments track by $index">
+            <input type="{{argument.type}}" class="gf-form-input width-5"
+                   ng-if="argument.type === 'number'"
                    ng-model="$parent.argValues[$index]"/>
             <select ng-if="argument.type === 'option'" class="gf-form-input"
                     ng-model="$parent.argValues[$index]"
-                    ng-options="option for option in argument.options">
+                    ng-options="option for option in argument.options"
+                    ng-change="onTypeChange()">>
             </select>
             <select ng-if="argument.type === 'typedOption'" class="gf-form-input"
                     ng-model="$parent.argValues[$index]"

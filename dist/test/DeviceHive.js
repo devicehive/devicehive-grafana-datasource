@@ -10,14 +10,23 @@ var _lodash = require("lodash");
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _Events2 = require("./utils/Events");
+
+var _Events3 = _interopRequireDefault(_Events2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 /**
  *
  */
-var DeviceHive = function () {
+var DeviceHive = function (_Events) {
+    _inherits(DeviceHive, _Events);
 
     /**
      * Creates an instance of DeviceHive.
@@ -32,7 +41,9 @@ var DeviceHive = function () {
 
         _classCallCheck(this, DeviceHive);
 
-        var me = this;
+        var _this = _possibleConstructorReturn(this, (DeviceHive.__proto__ || Object.getPrototypeOf(DeviceHive)).call(this));
+
+        var me = _this;
 
         if (serverUrl && (login && password || token)) {
             me.socket = new WebSocket(serverUrl);
@@ -52,6 +63,7 @@ var DeviceHive = function () {
         } else {
             throw new Error("You need to specify URL, login and password or token");
         }
+        return _this;
     }
 
     /**
@@ -144,7 +156,7 @@ var DeviceHive = function () {
     }]);
 
     return DeviceHive;
-}();
+}(_Events3.default);
 
 exports.default = DeviceHive;
 //# sourceMappingURL=DeviceHive.js.map

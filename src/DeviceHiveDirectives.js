@@ -73,6 +73,14 @@ class Converter {
 
             scope.isConverterSelected = true;
         };
+
+        scope.onTypeChange = function () {
+            const optionValue = ConverterManager.getConvertOptions()[scope.argValues[0]][0];
+
+            Object.keys(scope.argValues).forEach(function(key, index) {
+                scope.argValues[key] = index === 0 ? scope.argValues[key] : optionValue
+            });
+        }
     }
 }
 
