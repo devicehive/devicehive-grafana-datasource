@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.AnnotationsQueryCtrl = exports.ConfigCtrl = exports.QueryCtrl = exports.Datasource = undefined;
 
@@ -17,18 +17,14 @@ var _DeviceHiveAnnotationsQueryCtrl = require('./DeviceHiveAnnotationsQueryCtrl'
 
 var _DeviceHiveAnnotationsQueryCtrl2 = _interopRequireDefault(_DeviceHiveAnnotationsQueryCtrl);
 
+var _DeviceHiveConfigCtrl = require('./DeviceHiveConfigCtrl');
+
+var _DeviceHiveConfigCtrl2 = _interopRequireDefault(_DeviceHiveConfigCtrl);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var DeviceHiveConfigCtrl = function DeviceHiveConfigCtrl() {
-  _classCallCheck(this, DeviceHiveConfigCtrl);
-};
-
-DeviceHiveConfigCtrl.templateUrl = 'partials/datasource.config.html';
 
 exports.Datasource = _DeviceHiveDatasource2.default;
 exports.QueryCtrl = _DeviceHiveDatasourceQueryCtrl2.default;
-exports.ConfigCtrl = DeviceHiveConfigCtrl;
+exports.ConfigCtrl = _DeviceHiveConfigCtrl2.default;
 exports.AnnotationsQueryCtrl = _DeviceHiveAnnotationsQueryCtrl2.default;
 //# sourceMappingURL=module.js.map

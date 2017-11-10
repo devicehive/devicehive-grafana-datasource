@@ -81,13 +81,36 @@ var Events = function () {
 
             if (me.listeners.has(eventName)) {
                 var stack = me.listeners.get(eventName);
+                var listenersPool = stack.map(function (listener) {
+                    return listener;
+                });
 
-                for (var i = 0, l = stack.length; i < l; i++) {
-                    stack[i].call(me);
-                }
+                listenersPool.forEach(function (listener) {
+                    listener.call(me);
+                });
             }
 
             return true;
+        }
+
+        /**
+         * Add disposable event listener
+         * @param eventName
+         * @param callback
+         */
+
+    }, {
+        key: "once",
+        value: function once(eventName, callback) {
+            var _arguments = arguments;
+
+            var me = this;
+            var wrapper = function wrapper() {
+                me.removeEventListener(eventName, wrapper);
+                callback.call(me, _arguments);
+            };
+
+            me.addEventListener(eventName, wrapper);
         }
     }]);
 

@@ -88,6 +88,8 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                         me.token = token;
                         me.isOpen = false;
                         me.isAuthenticated = false;
+                        me.isTokenRequested = false;
+                        me.isAuthenticationStarted = false;
 
                         me.socket.addEventListener("open", function () {
                             return me.isOpen = true;
@@ -114,6 +116,8 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                         var me = this;
 
                         return me._getReadyClient().then(function () {
+                            return me.isAuthenticated === true || messageObject.action === "authenticate" || messageObject.action === "token" ? Promise.resolve() : me.authenticate();
+                        }).then(function () {
                             return new Promise(function (resolve, reject) {
                                 messageObject.requestId = messageObject.requestId || lodash.uniqueId("deviceHiveId_");
                                 me.socket.send(JSON.stringify(messageObject));
@@ -124,7 +128,7 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
 
                                     if (messageData.action === messageObject.action && messageData.requestId === messageObject.requestId) {
                                         me.socket.removeEventListener("message", listener);
-                                        me.isAuthenticated = isSuccess;
+                                        me.isAuthenticated = isSuccess === false ? isSuccess : me.isAuthenticated;
                                         isSuccess ? resolve(messageData) : reject(messageData.error);
                                     }
                                 };
@@ -147,14 +151,37 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                         me.login = login || me.login;
                         me.password = password || me.password;
 
-                        return me.isAuthenticated ? Promise.resolve() : (me.token ? me.send({ action: "authenticate", token: me.token }) : me.send({ action: "token", login: me.login, password: me.password }).then(function (_ref3) {
-                            var accessToken = _ref3.accessToken,
-                                refreshToken = _ref3.refreshToken;
-                            return me.authenticate({ token: accessToken });
-                        }).catch(function () {
-                            return me.authenticate({ login: me.login, password: me.password });
-                        })).then(function () {
-                            return me.isAuthenticated = true;
+                        return new Promise(function (resolve, reject) {
+                            me.once("authenticated", function () {
+                                me.isTokenRequested = false;
+                                me.isAuthenticationStarted = false;
+                                me.isAuthenticated = true;
+                                resolve();
+                            });
+
+                            if (me.isAuthenticated === true) {
+                                me.dispatchEvent("authenticated");
+                            } else {
+                                if (me.isAuthenticationStarted === false || me.isTokenRequested === false) {
+                                    if (me.token) {
+                                        me.isAuthenticationStarted = true;
+                                        me.send({ action: "authenticate", token: me.token }).then(function () {
+                                            return me.dispatchEvent("authenticated");
+                                        }).catch(function (error) {
+                                            return reject(error);
+                                        });
+                                    } else {
+                                        me.isTokenRequested = true;
+                                        me.send({ action: "token", login: me.login, password: me.password }).then(function (_ref3) {
+                                            var accessToken = _ref3.accessToken,
+                                                refreshToken = _ref3.refreshToken;
+                                            return me.authenticate({ token: accessToken });
+                                        }).catch(function (error) {
+                                            return reject(error);
+                                        });
+                                    }
+                                }
+                            }
                         });
                     }
                 }, {

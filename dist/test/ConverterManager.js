@@ -173,7 +173,7 @@ var ConverterManager = function () {
         key: 'getUnitConvertOptions',
         value: function getUnitConvertOptions() {
             return {
-                temperature: ['c', 'f', 'k'],
+                temperature: ['C', 'F', 'K'],
                 length: ['m', 'mi', 'yd', 'ft', 'in'],
                 weight: ['kg', 'lb', 'oz'],
                 volume: ['l', 'gal', 'pt']

@@ -22,7 +22,11 @@
     <label class="gf-form-label width-9">Auth Type
         <info-popover mode="right-normal" position="top center">DeviceHive access credentials. Login/Password or Access Token</info-popover>
     </label>
-    <select class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.authType" ng-options="f as f for f in ['Login/Password', 'Token']"></select>
+    <select class="gf-form-input max-width-27"
+            ng-model="ctrl.current.jsonData.authType"
+            ng-options="f as f for f in ['Login/Password', 'Token']"
+            ng-change="ctrl.onChangeInternal()">
+    </select>
 </div>
 
 <div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Login/Password"'>
@@ -51,7 +55,7 @@
 <div class="gf-form-group">
     <div class="grafana-info-box">
 
-        <i>Advanced information how to get started with DeviceHive and Grafana located <a href="https://docs.devicehive.com/docs/get-started" target="_blank">here</a></i>
+        <i>Advanced information how to get started with DeviceHive and Grafana located <a href="https://docs.devicehive.com/docs/grafana-datasource" target="_blank">here</a></i>
         <br>
         <br>
         <h3><i><b>Server URL</b></i></h3>

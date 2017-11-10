@@ -82,13 +82,11 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
                     value: function query(options) {
                         var me = this;
 
-                        return me.deviceHive.authenticate().then(function () {
-                            return Promise.all(options.targets.filter(function (target) {
-                                return target.hide !== true;
-                            }).map(function (target) {
-                                return me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints));
-                            }));
-                        }).then(function (results) {
+                        return Promise.all(options.targets.filter(function (target) {
+                            return target.hide !== true;
+                        }).map(function (target) {
+                            return me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints));
+                        })).then(function (results) {
                             return {
                                 data: results.map(function (result, index) {
                                     var type = options.targets[index].type;
@@ -103,6 +101,8 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
                                     };
                                 })
                             };
+                        }).catch(function (error) {
+                            return me.q.reject({ status: 'error', message: error, title: 'Error' });
                         });
                     }
                 }, {
@@ -110,9 +110,7 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
                     value: function annotationQuery(options) {
                         var me = this;
 
-                        return me.deviceHive.authenticate().then(function () {
-                            return me.deviceHive.send(me._generateRequestObject(options.annotation.config, options, options.annotation.limit));
-                        }).then(function (result) {
+                        return me.deviceHive.send(me._generateRequestObject(options.annotation.config, options, options.annotation.limit)).then(function (result) {
                             var type = options.annotation.config.type;
                             var dataPath = me._processVariables(options.annotation.config.dataPath);
 
@@ -123,6 +121,8 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
 
                                 return annotationObj;
                             });
+                        }).catch(function (error) {
+                            return me.q.reject({ status: 'error', message: error, title: 'Error' });
                         });
                     }
                 }, {
@@ -133,7 +133,7 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
                         return me.deviceHive.authenticate().then(function () {
                             return Promise.resolve({ status: 'success', message: 'Data source is working', title: 'Success' });
                         }).catch(function (error) {
-                            return Promise.resolve({ status: 'error', message: error, title: 'Error' });
+                            return me.q.reject({ status: 'error', message: error, title: 'Error' });
                         });
                     }
                 }, {

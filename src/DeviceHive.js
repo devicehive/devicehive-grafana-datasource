@@ -25,6 +25,8 @@ class DeviceHive extends Events {
             me.token = token;
             me.isOpen = false;
             me.isAuthenticated = false;
+            me.isTokenRequested = false;
+            me.isAuthenticationStarted = false;
 
             me.socket.addEventListener(`open`, () => me.isOpen = true);
             me.socket.addEventListener(`close`, () => me.isOpen = false);
@@ -42,6 +44,12 @@ class DeviceHive extends Events {
         const me = this;
 
         return me._getReadyClient()
+            .then(() => {
+                return me.isAuthenticated === true ||
+                    messageObject.action === `authenticate` ||
+                    messageObject.action === `token` ?
+                    Promise.resolve() : me.authenticate();
+            })
             .then(() => new Promise((resolve, reject) => {
                 messageObject.requestId = messageObject.requestId || lodash.uniqueId(`deviceHiveId_`);
                 me.socket.send(JSON.stringify(messageObject));
@@ -53,7 +61,7 @@ class DeviceHive extends Events {
                     if (messageData.action === messageObject.action &&
                         messageData.requestId === messageObject.requestId) {
                         me.socket.removeEventListener(`message`, listener);
-                        me.isAuthenticated = isSuccess;
+                        me.isAuthenticated = isSuccess === false ? isSuccess : me.isAuthenticated;
                         isSuccess ? resolve(messageData) : reject(messageData.error);
                     }
                 };
@@ -74,12 +82,32 @@ class DeviceHive extends Events {
         me.login = login || me.login;
         me.password = password || me.password;
 
-        return  me.isAuthenticated ? Promise.resolve() : (me.token ?
-            me.send({ action: `authenticate`, token: me.token }) :
-            me.send({ action: `token`, login: me.login,  password: me.password })
-                .then(({ accessToken, refreshToken }) => me.authenticate({ token: accessToken }))
-                .catch(() => me.authenticate({ login: me.login, password: me.password })))
-            .then(() => me.isAuthenticated = true );
+        return new Promise((resolve, reject) => {
+            me.once(`authenticated`, () => {
+                me.isTokenRequested = false;
+                me.isAuthenticationStarted = false;
+                me.isAuthenticated = true;
+                resolve();
+            });
+
+            if (me.isAuthenticated === true) {
+                me.dispatchEvent(`authenticated`);
+            } else {
+                if (me.isAuthenticationStarted === false || me.isTokenRequested === false) {
+                    if (me.token) {
+                        me.isAuthenticationStarted = true;
+                        me.send({action: `authenticate`, token: me.token})
+                            .then(() => me.dispatchEvent(`authenticated`))
+                            .catch((error) => reject(error));
+                    } else {
+                        me.isTokenRequested = true;
+                        me.send({action: `token`, login: me.login, password: me.password})
+                            .then(({accessToken, refreshToken}) => me.authenticate({token: accessToken}))
+                            .catch((error) => reject(error));
+                    }
+                }
+            }
+        });
     }
 
     /**

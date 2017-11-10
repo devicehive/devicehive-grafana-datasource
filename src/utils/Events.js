@@ -60,14 +60,29 @@ class Events {
 
         if (me.listeners.has(eventName)) {
             const stack = me.listeners.get(eventName);
+            const listenersPool = stack.map((listener) => listener);
 
-            for (let i = 0, l = stack.length; i < l; i++) {
-                stack[i].call(me);
-            }
-
+            listenersPool.forEach((listener) => {
+                listener.call(me);
+            });
         }
 
         return true;
+    }
+
+    /**
+     * Add disposable event listener
+     * @param eventName
+     * @param callback
+     */
+    once (eventName, callback) {
+        const me = this;
+        const wrapper = () => {
+            me.removeEventListener(eventName, wrapper);
+            callback.call(me, arguments);
+        };
+
+        me.addEventListener(eventName, wrapper);
     }
 }
 

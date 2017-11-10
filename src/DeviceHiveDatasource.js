@@ -45,11 +45,9 @@ class DeviceHiveDatasource {
     query(options) {
         const me = this;
 
-        return me.deviceHive.authenticate()
-            .then(() => Promise.all(options.targets
+        return Promise.all(options.targets
                 .filter(target => target.hide !== true )
-                .map(target => me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints)))
-            ))
+                .map(target => me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints))))
             .then(results => {
                 return {
                     data: results.map((result, index) => {
@@ -68,7 +66,8 @@ class DeviceHiveDatasource {
                         };
                     })
                 }
-            });
+            })
+            .catch((error) => me.q.reject({ status: `error`, message: error, title: `Error` }));
     }
 
     /**
@@ -79,9 +78,8 @@ class DeviceHiveDatasource {
     annotationQuery(options) {
         const me = this;
 
-        return me.deviceHive.authenticate()
-            .then(() => me.deviceHive.send(me._generateRequestObject(
-                options.annotation.config, options, options.annotation.limit)))
+        return me.deviceHive.send(me._generateRequestObject(
+                options.annotation.config, options, options.annotation.limit))
             .then(result => {
                 const type = options.annotation.config.type;
                 const dataPath = me._processVariables(options.annotation.config.dataPath);
@@ -93,7 +91,8 @@ class DeviceHiveDatasource {
 
                     return annotationObj;
                 });
-            });
+            })
+            .catch((error) => me.q.reject({ status: `error`, message: error, title: `Error` }));
     }
 
     /**
@@ -106,7 +105,7 @@ class DeviceHiveDatasource {
 
         return me.deviceHive.authenticate()
             .then(() => Promise.resolve({ status: `success`, message: `Data source is working`, title: `Success` }))
-            .catch((error) => Promise.resolve({ status: `error`, message: error, title: `Error` }));
+            .catch((error) => me.q.reject({ status: `error`, message: error, title: `Error` }));
     }
 
     /**
