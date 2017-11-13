@@ -116,9 +116,9 @@ var Converter = function () {
     return Converter;
 }();
 
-_angular2.default.module('grafana.directives').directive('converterSelector', function () {
+_angular2.default.module('grafana.directives').directive('dhConverterSelector', function () {
     return new ConverterSelector();
-}).directive('converter', function () {
+}).directive('dhConverter', function () {
     return new Converter();
 });
 //# sourceMappingURL=DeviceHiveDirectives.js.map

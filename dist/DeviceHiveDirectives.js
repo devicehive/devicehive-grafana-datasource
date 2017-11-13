@@ -129,9 +129,9 @@ System.register(['angular', './ConverterManager.js'], function (_export, _contex
                 return Converter;
             }();
 
-            angular.module('grafana.directives').directive('converterSelector', function () {
+            angular.module('grafana.directives').directive('dhConverterSelector', function () {
                 return new ConverterSelector();
-            }).directive('converter', function () {
+            }).directive('dhConverter', function () {
                 return new Converter();
             });
         }

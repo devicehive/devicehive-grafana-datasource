@@ -1,10 +1,10 @@
 <div ng-if="!isConverterSelected">
     <div class="gf-form-inline">
-        <converter-selector
+        <dh-converter-selector
                 only-selector="true"
                 on-blur="isConverterSelected = true"
                 on-select="onConverterSelect(converterName)">
-        </converter-selector>
+        </dh-converter-selector>
     </div>
 </div>
 <div ng-if="isConverterSelected">

@@ -92,5 +92,5 @@ class Converter {
 
 angular
     .module('grafana.directives')
-    .directive('converterSelector', () => new ConverterSelector)
-    .directive('converter', () => new Converter);
+    .directive('dhConverterSelector', () => new ConverterSelector)
+    .directive('dhConverter', () => new Converter);
