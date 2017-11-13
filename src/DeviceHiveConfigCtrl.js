@@ -11,10 +11,15 @@ class DeviceHiveConfigCtrl {
         const me = this;
 
         if (me.current.jsonData.authType === 'Token') {
-            me.current.jsonData.auth.login = '';
-            me.current.jsonData.auth.password = '';
+            me.current.jsonData.auth = {
+                login: ``,
+                password: ``
+            }
         } else {
-            me.current.jsonData.auth.token = '';
+            me.current.jsonData.auth = {
+                accessToken: ``,
+                refreshToken: ``
+            }
         }
     }
 }

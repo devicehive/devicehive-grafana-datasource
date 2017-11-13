@@ -65,14 +65,15 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
 
                 /**
                  * Creates an instance of DeviceHive.
-                 * @param {Object} { login, password, serverUrl, token }
+                 * @param {Object} { serverUrl, login, password, accessToken, refreshToken }
                  * @memberof DeviceHive
                  */
                 function DeviceHive(_ref) {
-                    var login = _ref.login,
+                    var serverUrl = _ref.serverUrl,
+                        login = _ref.login,
                         password = _ref.password,
-                        serverUrl = _ref.serverUrl,
-                        token = _ref.token;
+                        accessToken = _ref.accessToken,
+                        refreshToken = _ref.refreshToken;
 
                     _classCallCheck(this, DeviceHive);
 
@@ -80,12 +81,13 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
 
                     var me = _this;
 
-                    if (serverUrl && (login && password || token)) {
+                    if (serverUrl && (login && password || accessToken)) {
                         me.socket = new WebSocket(serverUrl);
                         me.login = login;
                         me.password = password;
                         me.serverUrl = serverUrl;
-                        me.token = token;
+                        me.accessToken = accessToken;
+                        me.refreshToken = refreshToken;
                         me.isOpen = false;
                         me.isAuthenticated = false;
                         me.isTokenRequested = false;
@@ -98,7 +100,7 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                             return me.isOpen = false;
                         });
                     } else {
-                        throw new Error("You need to specify URL, login and password or token");
+                        throw new Error("You need to specify URL, login and password or Access Token");
                     }
                     return _this;
                 }
@@ -116,7 +118,7 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                         var me = this;
 
                         return me._getReadyClient().then(function () {
-                            return me.isAuthenticated === true || messageObject.action === "authenticate" || messageObject.action === "token" ? Promise.resolve() : me.authenticate();
+                            return me.isAuthenticated === true || messageObject.action === "authenticate" || messageObject.action === "token/refresh" || messageObject.action === "token" ? Promise.resolve() : me.authenticate();
                         }).then(function () {
                             return new Promise(function (resolve, reject) {
                                 messageObject.requestId = messageObject.requestId || lodash.uniqueId("deviceHiveId_");
@@ -147,7 +149,7 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
 
                         var me = this;
 
-                        me.token = token || me.token;
+                        me.accessToken = token || me.accessToken;
                         me.login = login || me.login;
                         me.password = password || me.password;
 
@@ -163,10 +165,14 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                                 me.dispatchEvent("authenticated");
                             } else {
                                 if (me.isAuthenticationStarted === false || me.isTokenRequested === false) {
-                                    if (me.token) {
+                                    if (me.accessToken) {
                                         me.isAuthenticationStarted = true;
-                                        me.send({ action: "authenticate", token: me.token }).then(function () {
+                                        me.send({ action: "authenticate", token: me.accessToken }).then(function () {
                                             return me.dispatchEvent("authenticated");
+                                        }).catch(function (error) {
+                                            return me.refreshToken ? me._refreshToken() : Promise.reject(error);
+                                        }).then(function (result) {
+                                            return result.accessToken ? me.authenticate({ token: result.accessToken }) : Promise.resolve();
                                         }).catch(function (error) {
                                             return reject(error);
                                         });
@@ -175,6 +181,10 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                                         me.send({ action: "token", login: me.login, password: me.password }).then(function (_ref3) {
                                             var accessToken = _ref3.accessToken,
                                                 refreshToken = _ref3.refreshToken;
+
+                                            me.accessToken = accessToken;
+                                            me.refreshToken = refreshToken;
+
                                             return me.authenticate({ token: accessToken });
                                         }).catch(function (error) {
                                             return reject(error);
@@ -182,6 +192,16 @@ System.register(["lodash", "./utils/Events"], function (_export, _context) {
                                     }
                                 }
                             }
+                        });
+                    }
+                }, {
+                    key: "_refreshToken",
+                    value: function _refreshToken() {
+                        var me = this;
+
+                        return me.send({
+                            action: "token/refresh",
+                            refreshToken: me.refreshToken
                         });
                     }
                 }, {

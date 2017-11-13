@@ -34,32 +34,3 @@ Prerequisites: You should have Grafana, npm and yarn installed and have permissi
 8. Type path to variable inside command in input. (Remember you could use object and arrays inside it, f.e. `parameters.testData[0].temperature`);
 9. Click time range burron in the top header on the right.
 10. Type `now-2m` in `From` text field, choose refreshing option from dropdown and click `Apply`. (Remember cache is available for last 2 minutes only)
-
-## Development
-
-This section is for development purposes only.
-
-General documentation about datasource plugins can be found in the [Docs](https://github.com/grafana/grafana/blob/master/docs/sources/plugins/developing/datasources.md).
-
-There are some prerequisites plugin should have to work with Grafana, you could find them in abovementioned docs.
-
-Response from query should have this kind of shape:
-
-``` javascript
-[
-  {
-    "target":"command", // The field being queried for
-    "datapoints":[
-      [622,1450754160000],  // Metric value as a float , unixtimestamp in milliseconds
-      [365,1450754220000]
-    ]
-  },
-  {
-    "target":"notification",
-    "datapoints":[
-      [861,1450754160000],
-      [767,1450754220000]
-    ]
-  }
-]
-```

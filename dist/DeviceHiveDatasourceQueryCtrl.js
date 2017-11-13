@@ -80,7 +80,7 @@ System.register(['./css/query-editor.css!', './DeviceHiveDirectives.js', 'app/pl
                     var me = _this;
 
                     me.target.target = me.target.target || 'select metric';
-                    me.target.type = me.target.type || 'command';
+                    me.target.type = me.target.type || 'notification';
                     me.target.name = me.target.name || '';
                     me.target.dataPath = me.target.dataPath || '';
                     me.target.converters = me.target.converters || [];

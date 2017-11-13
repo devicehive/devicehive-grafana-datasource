@@ -7,7 +7,7 @@
   },
 
   "alerting": false,
-  "metrics": false,
+  "metrics": true,
   "annotations": true,
 
   "info": {

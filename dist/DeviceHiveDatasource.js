@@ -65,7 +65,8 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
                         serverUrl: me.jsonData.serverURL,
                         login: me.jsonData.auth.login,
                         password: me.jsonData.auth.password,
-                        token: me.jsonData.auth.token
+                        accessToken: me.jsonData.auth.accessToken,
+                        refreshToken: me.jsonData.auth.refreshToken
                     });
                 }
 

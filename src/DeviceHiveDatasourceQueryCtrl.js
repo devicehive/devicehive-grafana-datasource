@@ -26,7 +26,7 @@ class DeviceHiveDatasourceQueryCtrl extends QueryCtrl {
         const me = this;
 
         me.target.target = me.target.target || `select metric`;
-        me.target.type = me.target.type || `command`;
+        me.target.type = me.target.type || `notification`;
         me.target.name = me.target.name || ``;
         me.target.dataPath = me.target.dataPath || ``;
         me.target.converters = me.target.converters || [];
