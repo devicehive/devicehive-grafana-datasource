@@ -1,0 +1,111 @@
+<h3 class="page-heading">DeviceHive Configuration</h3>
+
+<div class="gf-form">
+    <label class="gf-form-label width-10">Server URL
+        <info-popover mode="right-normal" position="top center">Server URL - is the path to the DeviceHive WebSocket server</info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.serverURL" spellcheck="false" placeholder="ws://..." required/>
+</div>
+
+<div class="gf-form">
+    <label class="gf-form-label width-10">Device ID
+        <info-popover mode="right-normal" position="top center">Unique identifier of the DeviceHive device</info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.deviceId" spellcheck="false" placeholder="a1b2c3..." required/>
+</div>
+
+<br>
+
+<h3 class="page-heading">Authentication</h3>
+
+<div class="gf-form">
+    <label class="gf-form-label width-10">Auth Type
+        <info-popover mode="right-normal" position="top center">DeviceHive access credentials. Login/Password or Access Token</info-popover>
+    </label>
+    <select class="gf-form-input max-width-27"
+            ng-model="ctrl.current.jsonData.authType"
+            ng-options="f as f for f in ['Login/Password', 'Token']"
+            ng-change="ctrl.onChangeInternal()">
+    </select>
+</div>
+
+<div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Login/Password"'>
+    <label class="gf-form-label width-10">Login
+        <info-popover mode="right-normal" position="top center">DeviceHive user's login</info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.login" spellcheck="false" placeholder="testUser"/>
+</div>
+
+<div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Login/Password"'>
+    <label class="gf-form-label width-10">Password
+        <info-popover mode="right-normal" position="top center">DeviceHive user's password</info-popover>
+    </label>
+    <input type="password" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.password" spellcheck="false" placeholder="testPassword"/>
+</div>
+
+<div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Token"'>
+    <label class="gf-form-label width-10">Access Token
+        <info-popover mode="right-normal" position="top center">DeviceHive user's Access Token</info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.accessToken" spellcheck="false" placeholder="a1b2c3..."/>
+</div>
+
+<div class="gf-form" ng-show='ctrl.current.jsonData.authType == "Token"'>
+    <label class="gf-form-label width-10">Refresh Token
+        <info-popover mode="right-normal" position="top center">DeviceHive user's Refresh Token (not required)</info-popover>
+    </label>
+    <input type="text" class="gf-form-input max-width-27" ng-model="ctrl.current.jsonData.auth.refreshToken" spellcheck="false" placeholder="a1b2c3..."/>
+</div>
+
+<br>
+
+<div class="gf-form-group">
+    <div class="grafana-info-box">
+
+        <i>Advanced information how to get started with DeviceHive and Grafana located <a href="https://docs.devicehive.com/docs/grafana-datasource" target="_blank">here</a></i>
+        <br>
+        <br>
+        <h3><i><b>Server URL</b></i></h3>
+        Server URL - is the path to the DeviceHive WebSocket server. In case of official playground, You can get it by the next link:<br>
+        <a href="https://playground.devicehive.com/api/rest/info" target="_blank">https://playground.devicehive.com/api/rest/info</a> (webSocketServerUrl field)<br>
+        When You have Your own DeviceHive instance this link will change to:<br> http(s)://[host-name]/api/rest/info
+        <br>
+        <br>
+        <h3><i><b>Device ID</b></i></h3>
+        Device is a unit that runs microcode, and it communicates with the API in the following cases:
+        <ul>
+            <li>When started, device registers within the framework by passing unique identifier, display name and other meta-information.</li>
+            <li>Device sends notifications with an arbitrary content format to notify other components about the changes in the device's environment.</li>
+            <li>Device listens for commands issued by other components and executes them in an appropriate way.</li>
+        </ul>
+        All Your devices id's You can find in the DeviceHive admin console.
+        <br>
+        <br>
+        <h3><i><b>Authentication</b></i></h3>
+        Users are authenticated using JSON Web Token.<br>
+        The access is provided based on authenticated user role (Client or Administrator) and provided access rights,
+        please refer to the <a href="https://docs.devicehive.com/docs/rest" target="_blank">Reference</a>
+        for the list of available resources and methods for each user role.
+        <br>
+        <br>
+        <div style="margin-left: 50px;">
+            <h4><i><b>Login and Password</b></i></h4>
+            Login and Password is the credentials that You have mentioned when created the user (In API console).<br>
+            How to create a user You can find <a href="https://docs.devicehive.com/docs/user" target="_blank">here</a>
+            <br>
+            <br>
+            <h4><i><b>Access and Refresh Token</b></i></h4>
+            Access and Refresh Token is the JSON Web Tokens with expiration date that can be generated for any user.<br>
+            How to get an Access and Refresh Token You can find <a href="https://docs.devicehive.com/docs/authentication" target="_blank">here</a>
+            <br>
+            <br>
+        </div>
+
+        <hr>
+        <a href="https://devicehive.com" target="_blank">Official site</a><br>
+        <a href="https://docs.devicehive.com/docs" target="_blank">Official documentation</a><br>
+        <a href="https://playground.devicehive.com" target="_blank">Official playground</a><br>
+        <a href="https://github.com/devicehive" target="_blank">GitHub</a>
+
+    </div>
+</div>
