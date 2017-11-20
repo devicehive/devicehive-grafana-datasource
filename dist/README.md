@@ -6,13 +6,13 @@ This datasource was created to connect Grafana with DeviceHive to track commands
 
 Based on Grafana Simple JSON Datasource plugin.
 
-## Adding the data source to Grafana
+## Manual adding the data source to Grafana (with rebuilding)
 
-Prerequisites: You should have Grafana, npm and yarn installed and have permissions to copy data to Plugins folder(you could set it in `grafana.ini` in `Paths->plugins`).
+Prerequisites: You should have Grafana and npm installed and have permissions to copy data to Plugins folder(you could set it in `grafana.ini` in `Paths->plugins`).
 
 1. Clone this repo to Plugins folder - `git clone https://github.com/devicehive/devicehive-grafana-datasource.git`;
 2. Go into folder - `cd devicehive-grafana-datasource`;
-3. Install all packages - `yarn install`;
+3. Install all packages - `npm install`;
 4. Build plugin - `npm run build`;
 5. Restart Grafana - `sudo service grafana-server restart`;
 6. Open Grafana in any browser;

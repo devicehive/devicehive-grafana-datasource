@@ -51,6 +51,7 @@ var DeviceHiveDatasourceQueryCtrl = function (_QueryCtrl) {
 
         me.target.target = me.target.target || 'select metric';
         me.target.type = me.target.type || 'notification';
+        me.target.target = me.target.label || '' + me.target.type + me.target.refId;
         me.target.name = me.target.name || '';
         me.target.dataPath = me.target.dataPath || '';
         me.target.converters = me.target.converters || [];

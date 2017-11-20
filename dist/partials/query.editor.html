@@ -1,5 +1,15 @@
 <query-editor-row query-ctrl="ctrl" class="generic-datasource-query-row" has-text-edit-mode="true">
     <div class="gf-form-inline">
+
+        <div class="gf-form">
+            <label class="gf-form-label width-4">Label</label>
+        </div>
+        <div class="gf-form gf-form-input-wrapper width-10 gf-form-input-wrapper--has-help-icon">
+            <input class="gf-form-input" ng-model="ctrl.target.label" spellcheck="false"
+                   ng-blur="ctrl.onChangeInternal()" placeholder="{{ ctrl.target.type + ctrl.target.refId }}"/>
+            <info-popover mode="right-absolute">Label (Not required, by default: [entityType][queryId])</info-popover>
+        </div>
+
         <div class="gf-form gf-form-select-wrapper width-12 gf-form-select-wrapper--has-help-icon">
             <select class="gf-form-input" ng-model="ctrl.target.type"
                     ng-options="f as f for f in ['command', 'notification']"

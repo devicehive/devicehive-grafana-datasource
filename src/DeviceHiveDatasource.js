@@ -53,11 +53,12 @@ class DeviceHiveDatasource {
                 return {
                     data: results.map((result, index) => {
                         const type = options.targets[index].type;
+                        const label = options.targets[index].label;
                         const dataPath = me._processVariables(options.targets[index].dataPath);
                         const refId = options.targets[index].refId;
 
                         return {
-                            target: `${type}${refId}`,
+                            target: label || `${type}${refId}`,
                             datapoints: result[`${type}s`].map(target => {
                                 return [
                                     me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters),
