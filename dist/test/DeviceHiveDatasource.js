@@ -80,11 +80,12 @@ var DeviceHiveDatasource = function () {
                 return {
                     data: results.map(function (result, index) {
                         var type = options.targets[index].type;
+                        var label = options.targets[index].label;
                         var dataPath = me._processVariables(options.targets[index].dataPath);
                         var refId = options.targets[index].refId;
 
                         return {
-                            target: '' + type + refId,
+                            target: label || '' + type + refId,
                             datapoints: result[type + 's'].map(function (target) {
                                 return [me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters), +_moment2.default.utc(target.timestamp).format('x')];
                             })
