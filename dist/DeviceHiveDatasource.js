@@ -82,23 +82,30 @@ System.register(['moment', './DeviceHive', './ConverterManager.js'], function (_
                     key: 'query',
                     value: function query(options) {
                         var me = this;
+                        var targetIndexes = [];
 
-                        return Promise.all(options.targets.filter(function (target) {
-                            return target.hide !== true;
+                        return Promise.all(options.targets.filter(function (target, index) {
+                            var isVisible = target.hide !== true;
+
+                            if (isVisible) {
+                                targetIndexes.push(index);
+                            }
+
+                            return isVisible;
                         }).map(function (target) {
                             return me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints));
                         })).then(function (results) {
                             return {
                                 data: results.map(function (result, index) {
-                                    var type = options.targets[index].type;
-                                    var label = options.targets[index].label;
-                                    var dataPath = me._processVariables(options.targets[index].dataPath);
-                                    var refId = options.targets[index].refId;
+                                    var type = options.targets[targetIndexes[index]].type;
+                                    var label = options.targets[targetIndexes[index]].label;
+                                    var dataPath = me._processVariables(options.targets[targetIndexes[index]].dataPath);
+                                    var refId = options.targets[targetIndexes[index]].refId;
 
                                     return {
                                         target: label || '' + type + refId,
                                         datapoints: result[type + 's'].map(function (target) {
-                                            return [me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters), +moment.utc(target.timestamp).format('x')];
+                                            return [me._convertValue(me._extractValueByPath(target, dataPath), options.targets[targetIndexes[index]].converters), +moment.utc(target.timestamp).format('x')];
                                         })
                                     };
                                 })

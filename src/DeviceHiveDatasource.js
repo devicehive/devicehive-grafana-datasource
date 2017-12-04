@@ -45,23 +45,32 @@ class DeviceHiveDatasource {
      */
     query(options) {
         const me = this;
+        const targetIndexes = [];
 
         return Promise.all(options.targets
-                .filter(target => target.hide !== true )
+                .filter((target, index) => {
+	                const isVisible = target.hide !== true;
+
+                    if (isVisible) {
+	                    targetIndexes.push(index);
+                    }
+
+                    return isVisible;
+                })
                 .map(target => me.deviceHive.send(me._generateRequestObject(target, options, options.maxDataPoints))))
             .then(results => {
                 return {
                     data: results.map((result, index) => {
-                        const type = options.targets[index].type;
-                        const label = options.targets[index].label;
-                        const dataPath = me._processVariables(options.targets[index].dataPath);
-                        const refId = options.targets[index].refId;
+                        const type = options.targets[targetIndexes[index]].type;
+                        const label = options.targets[targetIndexes[index]].label;
+                        const dataPath = me._processVariables(options.targets[targetIndexes[index]].dataPath);
+                        const refId = options.targets[targetIndexes[index]].refId;
 
                         return {
                             target: label || `${type}${refId}`,
                             datapoints: result[`${type}s`].map(target => {
                                 return [
-                                    me._convertValue(me._extractValueByPath(target, dataPath), options.targets[index].converters),
+                                    me._convertValue(me._extractValueByPath(target, dataPath), options.targets[targetIndexes[index]].converters),
                                     +moment.utc(target.timestamp).format(`x`)
                                 ]
                             })

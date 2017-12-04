@@ -46,7 +46,7 @@ var DeviceHive = function (_Events) {
 
         var me = _this;
 
-        if (serverUrl && (login && password || accessToken)) {
+        if (serverUrl && (login && password || accessToken || refreshToken)) {
             me.socket = new WebSocket(serverUrl);
             me.login = login;
             me.password = password;
@@ -137,7 +137,7 @@ var DeviceHive = function (_Events) {
                     me.dispatchEvent("authenticated");
                 } else {
                     if (me.isAuthenticationStarted === false || me.isTokenRequested === false) {
-                        if (me.accessToken) {
+                        if (me.accessToken || me.refreshToken) {
                             me.isAuthenticationStarted = true;
                             me.send({ action: "authenticate", token: me.accessToken }).then(function () {
                                 return me.dispatchEvent("authenticated");
