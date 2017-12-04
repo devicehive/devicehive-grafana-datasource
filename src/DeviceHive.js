@@ -18,7 +18,7 @@ class DeviceHive extends Events {
 
         const me = this;
 
-        if (serverUrl && ((login && password) || accessToken )) {
+        if (serverUrl && ((login && password) || (accessToken || refreshToken))) {
             me.socket = new WebSocket(serverUrl);
             me.login = login;
             me.password = password;
@@ -97,7 +97,7 @@ class DeviceHive extends Events {
                 me.dispatchEvent(`authenticated`);
             } else {
                 if (me.isAuthenticationStarted === false || me.isTokenRequested === false) {
-                    if (me.accessToken) {
+                    if (me.accessToken || me.refreshToken) {
                         me.isAuthenticationStarted = true;
                         me.send({action: `authenticate`, token: me.accessToken})
                             .then(() => me.dispatchEvent(`authenticated`))
