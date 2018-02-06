@@ -1,7 +1,5 @@
 # Grafana Datasource for DeviceHive 
 
-Currently in development.
-
 This datasource was created to connect Grafana with DeviceHive to track commands and notifications by particular device.
 
 Based on Grafana Simple JSON Datasource plugin.
